@@ -98,3 +98,56 @@ download on first use.
 
 See also: [expressive-speech.md](../expressive-speech.md),
 [disk usage](disk-usage.md).
+
+## Local native GGUF / Vulkan opt-in
+
+A user-managed `llama.cpp-omni` TTS server can replace only the VoxCPM2
+implementation. Set these variables before launching Electron:
+
+- `OMNIVOICE_VOXCPM2_NATIVE_BIN`: absolute path to `llama-tts-server`.
+- `OMNIVOICE_VOXCPM2_NATIVE_BASE`: installed VoxCPM2 BaseLM Q8_0 GGUF.
+- `OMNIVOICE_VOXCPM2_NATIVE_ACOUSTIC`: installed VoxCPM2 Acoustic F16 GGUF.
+- `OMNIVOICE_TTS_BACKEND=voxcpm2` to select this engine.
+
+Build the runtime with `GGML_VULKAN=ON`; Windows requires its adjacent DLLs.
+Revision `64d092c60db4b4ee45768476bd752f03fdcc98ea` was compiled locally on
+Windows x64. The adapter makes no model or executable downloads. Without the
+native opt-in, existing PyTorch and dedicated-venv installations are unchanged.
+
+The child binds only `127.0.0.1` on an ephemeral port; the adapter verifies
+listener ownership before requests, requires the startup log to confirm Vulkan,
+and terminates the owned child on unload, failure, or timeout. CPU fallback is
+rejected. Runtime routing becomes verified only after the child loads.
+The native log is under `DATA_DIR/voxcpm2-native/server.log`.
+
+Voice design, reference cloning, transcript continuation, seed and sampling
+controls reuse VoxCPM2's mappings. Languages remain model-dependent: Portuguese
+is declared upstream; a short local transcription check does not establish
+accent quality or parity for every voice, long text, or dubbing workflow.
+Weights inherit VoxCPM2's Apache-2.0 terms. Native runtime upstream:
+https://github.com/tc-mb/llama.cpp-omni
+
+First-run setup accepts the selected adapter's installed local GGUF files as
+TTS readiness; it does not mark the original Hugging Face checkpoint as cached
+or waive missing non-TTS dependencies.
+
+System CPU notifications consult the selected engine runtime instead of treating
+a CPU-only parent PyTorch as evidence that native speech runs on CPU. Selecting
+Vulkan before load does not claim verified acceleration; loaded evidence remains
+visible even when another unloaded adapter is created for an availability probe,
+and clears when the native child exits or unloads.
+
+
+With the explicit native Vulkan adapter, the usage panels show the selected
+provider until a model is loaded. Once the resident child confirms Vulkan, they
+show the matching GPU name from that same executable's `--list-devices` output.
+The identity probe runs once per load and is optional; a failed name probe retains
+the verified Vulkan device identifier. Unsupported utilization and VRAM counters
+are hidden rather than fabricated. CPU and system RAM measurements remain live.
+Unloading the model or losing the backend clears the in-use claim.
+
+The local native adapter accepts an explicit conversion CPU choice. The matching
+local TTS server interprets `--voxcpm2-n-gpu-layers 0` as CPU for both BaseLM and
+acoustic components. The adapter verifies `backend=CPU` for that request; the
+normal Vulkan default still rejects accidental CPU fallback. Switching choices
+restarts the owned server under its lock and does not mutate environment settings.

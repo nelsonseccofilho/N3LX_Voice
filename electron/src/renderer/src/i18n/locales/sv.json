@@ -2513,7 +2513,33 @@
     "copied": "Kopierade",
     "tailscale_qr_alt": "QR-kod för Tailscale URL"
   },
+  "convertOptions": {
+    "cpu_hint": "Röstmodellen körs på CPU.",
+    "compute": "Bearbetning av röstmodellen",
+    "compute_hint": "GPU använder tillgänglig acceleration; vissa steg körs fortfarande på CPU.",
+    "output": "Utdatafil",
+    "output_hint": "Välj mål innan du konverterar. Källmappen och {{name}} föreslås. Välj en mapp för inspelningar.",
+    "unavailable": "Enhetsval är inte tillgängligt för denna modell; den aktuella inställningen används."
+  },
   "convert": {
+    "saved_in_app": "Kopia i apphistoriken",
+    "save_hint": "Färdigt ljud finns i apphistoriken och kan tas bort när historiken rensas. Använd Spara som… för att välja namn och mapp för en separat kopia.",
+    "target_selected": "Vald målröst",
+    "target_required": "Välj en målröst före konverteringen.",
+    "no_singing_model": "Ingen sångmodell finns tillgänglig i denna installation.",
+    "singing_model": "Sångmodell",
+    "model_required": "Obligatoriskt",
+    "model_required_hint": "En kompatibel modell måste väljas före konverteringen. Röstprofilen väljs separat.",
+    "select_model": "Välj modell",
+    "audio_type": "Ljudtyp",
+    "speech": "Tal",
+    "singing": "Sång",
+    "speech_hint": "Känner igen orden och genererar tal med den valda rösten. Sångmelodin bevaras inte.",
+    "singing_hint": "Att ändra en sångröst med bevarad melodi och rytm kräver en särskild sångmotor.",
+    "singing_reference_required": "Sångkonvertering kräver referensljud i den valda röstprofilen.",
+    "singing_unavailable": "Sångkonvertering är ännu inte konfigurerad. Talmodellen används inte.",
+    "speech_model": "Talmodell",
+    "change_model": "Byt modell",
     "cloning_required": "Välj en användningsklar talsyntesmodell som stöder röstkloning.",
     "source_kicker": "Källklipp",
     "drop_audio": "Släpp klippet som ska konverteras — eller klicka. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Aktuell användning",
     "everyTwoSeconds": "Varannan sekund",
     "appVram": "Appens VRAM",
-    "voiceFirst": "Röstkvalitet först"
+    "voiceFirst": "Röstkvalitet först",
+    "gpuUsing": "GPU används",
+    "gpuSelected": "Vald · modellen är inte inläst"
   },
   "voiceControls": {
     "title": "Röstinställningar",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Godkänn licensen för varje modell nedan innan du använder den. Granska var och en och markera sedan dess ruta.",
     "retryHint": "Licenserna har godkänts. Om något väntade på dem, starta det igen.",
     "detailsFailed": "Licensinformationen kunde inte läsas in. Stäng dialogrutan och försök igen."
+  }
+,
+  "convertProgress": {
+    "title": "Konverteringsförlopp",
+    "analyzing": "Analyserar ljud",
+    "diffusion": "Konverterar sång",
+    "vocoder": "Skapar vågform",
+    "validating": "Kontrollerar ljud",
+    "marking": "Märker syntetiskt ljud",
+    "cancelling": "Avbrott begärt; väntar på att bearbetningen stannar…",
+    "cancelled": "Avbrott bekräftat — bearbetningen stoppad.",
+    "completed": "Konvertering klar",
+    "stage_progress": "Förlopp för aktuell fas",
+    "steps": "Del {{chunk}} · steg {{step}}/{{total}} · {{percent}} % av denna fas",
+    "eta": "Beräknad återstående tid i denna fas: {{time}}",
+    "eta_unknown": "Tidsuppskattning är ännu inte tillgänglig",
+    "stage_scope": "Procent och uppskattning gäller denna fas, inte hela konverteringen.",
+    "stalled": "Sångkonverteringen stoppades efter 30 minuter utan framsteg. Processen har avslutats. Prova ett kortare avsnitt.",
+    "cpu_limit": "CPU-trådar: {{threads}}; lägre prioritet.",
+    "cancel_unknown": "Avbrottet kunde inte bekräftas. Kontrollera status eller försök igen.",
+    "status_unknown": "Förlopp saknas; bearbetningen kan fortfarande pågå."
   }
 }

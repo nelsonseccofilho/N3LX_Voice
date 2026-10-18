@@ -2513,7 +2513,33 @@
     "copied": "已复制",
     "tailscale_qr_alt": "Tailscale URL 的二维码"
   },
+  "convertOptions": {
+    "cpu_hint": "语音模型将在 CPU 上运行。",
+    "compute": "语音模型处理",
+    "compute_hint": "GPU 使用可用的加速功能；部分阶段仍由 CPU 执行。",
+    "output": "输出文件",
+    "output_hint": "转换前请选择保存位置。建议使用源文件夹和 {{name}}。对于录音，请选择文件夹。",
+    "unavailable": "此模型不支持选择设备，将使用当前设置。"
+  },
   "convert": {
+    "saved_in_app": "应用历史记录中的副本",
+    "save_hint": "完成的音频保存在应用历史记录中，清理历史记录时可能会被删除。使用“另存为…”为单独的副本选择名称和文件夹。",
+    "target_selected": "已选目标声音",
+    "target_required": "转换前请选择目标声音。",
+    "no_singing_model": "此安装中没有可用的歌声模型。",
+    "singing_model": "歌声模型",
+    "model_required": "必选",
+    "model_required_hint": "转换前必须选择兼容的模型。声音配置需单独选择。",
+    "select_model": "选择模型",
+    "audio_type": "音频类型",
+    "speech": "说话",
+    "singing": "唱歌",
+    "speech_hint": "识别文字并用所选声音生成语音。不保留歌曲旋律。",
+    "singing_hint": "在保留旋律和节奏的同时转换歌声，需要专用的歌声引擎。",
+    "singing_reference_required": "歌声转换需要所选声音配置中的参考音频。",
+    "singing_unavailable": "尚未配置歌声转换。不会使用语音模型。",
+    "speech_model": "语音模型",
+    "change_model": "更换模型",
     "cloning_required": "请选择已就绪且支持声音克隆的语音合成模型。",
     "source_kicker": "源音频",
     "drop_audio": "拖入要转换的音频 — 或点击。WAV、MP3、M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "实时用量",
     "everyTwoSeconds": "每 2 秒更新",
     "appVram": "应用显存",
-    "voiceFirst": "优先保证语音质量"
+    "voiceFirst": "优先保证语音质量",
+    "gpuUsing": "GPU 使用中",
+    "gpuSelected": "已选择 · 模型未加载"
   },
   "voiceControls": {
     "title": "语音控制",
@@ -3460,5 +3488,26 @@
     "gateIntro": "使用下列每个模型之前，请先接受其许可。请逐一查看，然后勾选对应的复选框。",
     "retryHint": "已接受许可。如有等待中的操作，请重新开始。",
     "detailsFailed": "无法加载许可详情。请关闭此对话框后重试。"
+  }
+,
+  "convertProgress": {
+    "title": "转换进度",
+    "analyzing": "正在分析音频",
+    "diffusion": "正在转换歌声",
+    "vocoder": "正在生成波形",
+    "validating": "正在验证音频",
+    "marking": "正在添加合成音频标识",
+    "cancelling": "已请求取消，正在等待处理停止…",
+    "cancelled": "已确认取消，处理已停止。",
+    "completed": "转换已完成",
+    "stage_progress": "当前阶段进度",
+    "steps": "片段 {{chunk}} · 步骤 {{step}}/{{total}} · 当前阶段的 {{percent}}%",
+    "eta": "当前阶段预计剩余时间：{{time}}",
+    "eta_unknown": "暂时无法估算剩余时间",
+    "stage_scope": "百分比和预估时间仅对应当前阶段，不代表整个转换。",
+    "stalled": "歌声转换因30分钟无进展而停止。进程已结束。请尝试更短的片段。",
+    "cpu_limit": "CPU 线程数：{{threads}}；降低优先级。",
+    "cancel_unknown": "无法确认取消。请检查状态或再次尝试取消。",
+    "status_unknown": "无法获取进度状态，处理可能仍在运行。"
   }
 }

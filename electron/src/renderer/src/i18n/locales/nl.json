@@ -2513,7 +2513,33 @@
     "copied": "Gekopieerd",
     "tailscale_qr_alt": "QR-code voor de Tailscale-URL"
   },
+  "convertOptions": {
+    "cpu_hint": "Het stemmodel wordt op de CPU uitgevoerd.",
+    "compute": "Verwerking van het stemmodel",
+    "compute_hint": "GPU gebruikt beschikbare versnelling; sommige stappen blijven de CPU gebruiken.",
+    "output": "Uitvoerbestand",
+    "output_hint": "Kies de bestemming vóór het converteren. De bronmap en {{name}} worden voorgesteld. Kies bij opnamen een map.",
+    "unavailable": "Apparaatkeuze is niet beschikbaar voor dit model; de huidige instelling wordt gebruikt."
+  },
   "convert": {
+    "saved_in_app": "Kopie in de appgeschiedenis",
+    "save_hint": "Voltooide audio blijft in de appgeschiedenis en kan bij het opschonen worden verwijderd. Gebruik Opslaan als… om een naam en map voor een aparte kopie te kiezen.",
+    "target_selected": "Geselecteerde doelstem",
+    "target_required": "Selecteer een doelstem voordat je converteert.",
+    "no_singing_model": "Er is geen zangmodel beschikbaar in deze installatie.",
+    "singing_model": "Zangmodel",
+    "model_required": "Verplicht",
+    "model_required_hint": "Voor conversie moet een compatibel model zijn geselecteerd. Het stemprofiel wordt apart gekozen.",
+    "select_model": "Model selecteren",
+    "audio_type": "Audiotype",
+    "speech": "Spraak",
+    "singing": "Zang",
+    "speech_hint": "Herkent de woorden en genereert spraak met de gekozen stem. Gezongen melodieën blijven niet behouden.",
+    "singing_hint": "Een zangstem veranderen met behoud van melodie en ritme vereist een aparte zangengine.",
+    "singing_reference_required": "Zangconversie vereist referentieaudio in het geselecteerde stemprofiel.",
+    "singing_unavailable": "Zangconversie is nog niet ingesteld. Het spraakmodel wordt niet gebruikt.",
+    "speech_model": "Spraakmodel",
+    "change_model": "Model wijzigen",
     "cloning_required": "Kies een gebruiksklaar tekst-naar-spraakmodel dat stemmen klonen ondersteunt.",
     "source_kicker": "Bronclip",
     "drop_audio": "Sleep de te converteren clip hierheen — of klik. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Actueel gebruik",
     "everyTwoSeconds": "Elke 2 s",
     "appVram": "App-VRAM",
-    "voiceFirst": "Spraakkwaliteit eerst"
+    "voiceFirst": "Spraakkwaliteit eerst",
+    "gpuUsing": "GPU in gebruik",
+    "gpuSelected": "Geselecteerd · model niet geladen"
   },
   "voiceControls": {
     "title": "Steminstellingen",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Accepteer de licentie van elk model hieronder voordat je het gebruikt. Bekijk ze een voor een en vink dan het bijbehorende vakje aan.",
     "retryHint": "Licenties geaccepteerd. Als iets hierop wachtte, start het dan opnieuw.",
     "detailsFailed": "De licentiegegevens konden niet worden geladen. Sluit dit venster en probeer het opnieuw."
+  }
+,
+  "convertProgress": {
+    "title": "Conversievoortgang",
+    "analyzing": "Audio analyseren",
+    "diffusion": "Zang converteren",
+    "vocoder": "Golfvorm genereren",
+    "validating": "Audio controleren",
+    "marking": "Synthetische audio markeren",
+    "cancelling": "Annulering aangevraagd; wachten tot verwerking stopt…",
+    "cancelled": "Annulering bevestigd — verwerking gestopt.",
+    "completed": "Conversie voltooid",
+    "stage_progress": "Voortgang van huidige fase",
+    "steps": "Deel {{chunk}} · stap {{step}}/{{total}} · {{percent}}% van deze fase",
+    "eta": "Geschatte resterende tijd van deze fase: {{time}}",
+    "eta_unknown": "Tijdschatting nog niet beschikbaar",
+    "stage_scope": "Percentage en schatting gelden voor deze fase, niet voor de hele conversie.",
+    "stalled": "De zangconversie is na 30 minuten zonder voortgang gestopt. Het proces is beëindigd. Probeer een korter fragment.",
+    "cpu_limit": "CPU-threads: {{threads}}; lagere prioriteit.",
+    "cancel_unknown": "Annulering kon niet worden bevestigd. Controleer de status of probeer opnieuw.",
+    "status_unknown": "Voortgang niet beschikbaar; verwerking is mogelijk nog actief."
   }
 }

@@ -42,9 +42,20 @@ def _disk_free_gb(path: str) -> float:
 @router.get("/setup/status", response_model=SetupStatusResponse)
 def setup_status():
     """Snapshot the setup state so the client can pick its boot screen."""
+    required = REQUIRED_MODELS
+    try:
+        from services.tts_backend import active_backend_id, get_backend_class
+        engine = get_backend_class(active_backend_id())
+        native_ready = getattr(engine, "installed_model_files_ready", None)
+        if callable(native_ready) and native_ready():
+            from .models import KNOWN_MODELS
+            tts_repos = {model["repo_id"] for model in KNOWN_MODELS if model.get("role") == "TTS"}
+            required = [(rid, label) for rid, label in required if rid not in tts_repos]
+    except (ImportError, OSError, RuntimeError, ValueError):
+        logger.debug("Selected native model readiness unavailable", exc_info=True)
     missing = [
         {"repo_id": rid, "label": label}
-        for (rid, label) in REQUIRED_MODELS
+        for (rid, label) in required
         if not is_cached(rid)
     ]
     cache = hf_cache_dir()

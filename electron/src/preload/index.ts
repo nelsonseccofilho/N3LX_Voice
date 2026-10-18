@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer, webUtils, type IpcRendererEvent } from 'electron';
 import type {
   BackendStatus,
   DataRelocationStage,
@@ -51,8 +51,7 @@ const bridge: VoiceStudioBridge = {
     download: () => ipcRenderer.invoke('updates:download') as Promise<UpdateState>,
     dismiss: () => ipcRenderer.invoke('updates:dismiss') as Promise<UpdateState>,
     install: () => ipcRenderer.invoke('updates:install') as Promise<void>,
-    listReleases: () =>
-      ipcRenderer.invoke('updates:listReleases') as Promise<UpdateReleaseInfo[]>,
+    listReleases: () => ipcRenderer.invoke('updates:listReleases') as Promise<UpdateReleaseInfo[]>,
     onState: (cb) => subscribe<UpdateState>('updates:state', cb),
   },
   watch: {
@@ -127,6 +126,12 @@ const bridge: VoiceStudioBridge = {
     onEvent: (callback) => subscribe('capture:event', callback),
   },
   files: {
+    chooseConversionDestination: (file) =>
+      ipcRenderer.invoke('files:chooseConversionDestination', {
+        name: file.name,
+        sourcePath: webUtils.getPathForFile(file),
+      }),
+    saveConversion: (req) => ipcRenderer.invoke('files:saveConversion', req),
     authorizeMediaTool: (kind) => ipcRenderer.invoke('files:authorizeMediaTool', kind),
     authorizeModelsDirectory: (reset = false) =>
       ipcRenderer.invoke('files:authorizeModelsDirectory', reset),

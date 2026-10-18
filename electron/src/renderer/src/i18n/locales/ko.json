@@ -2513,7 +2513,33 @@
     "copied": "복사됨",
     "tailscale_qr_alt": "Tailscale URL의 QR 코드"
   },
+  "convertOptions": {
+    "cpu_hint": "음성 모델은 CPU에서 실행됩니다.",
+    "compute": "음성 모델 처리",
+    "compute_hint": "GPU는 사용 가능한 가속을 사용하며 일부 단계는 CPU에서 실행됩니다.",
+    "output": "출력 파일",
+    "output_hint": "변환 전에 저장 위치를 선택하세요. 원본 폴더와 {{name}}을 제안합니다. 녹음의 경우 폴더를 선택하세요.",
+    "unavailable": "이 모델은 장치 선택을 지원하지 않으므로 현재 설정을 사용합니다."
+  },
   "convert": {
+    "saved_in_app": "앱 기록에 저장된 사본",
+    "save_hint": "완성된 오디오는 앱 기록에 남으며 기록 정리 시 삭제될 수 있습니다. 다른 이름으로 저장…을 사용해 별도 사본의 이름과 폴더를 선택하세요.",
+    "target_selected": "선택한 대상 목소리",
+    "target_required": "변환 전에 대상 목소리를 선택하세요.",
+    "no_singing_model": "이 설치 환경에는 사용 가능한 노랫소리 모델이 없습니다.",
+    "singing_model": "노랫소리 모델",
+    "model_required": "필수",
+    "model_required_hint": "변환 전에 호환되는 모델을 선택해야 합니다. 음성 프로필은 별도로 선택합니다.",
+    "select_model": "모델 선택",
+    "audio_type": "오디오 유형",
+    "speech": "말소리",
+    "singing": "노랫소리",
+    "speech_hint": "단어를 인식하고 선택한 목소리로 말을 생성합니다. 노래의 멜로디는 유지되지 않습니다.",
+    "singing_hint": "멜로디와 리듬을 유지하며 노랫소리를 바꾸려면 전용 노래 엔진이 필요합니다.",
+    "singing_reference_required": "노래 변환에는 선택한 음성 프로필의 참조 오디오가 필요합니다.",
+    "singing_unavailable": "노랫소리 변환이 아직 설정되지 않았습니다. 말소리 모델은 사용하지 않습니다.",
+    "speech_model": "말소리 모델",
+    "change_model": "모델 변경",
     "cloning_required": "음성 복제를 지원하는 사용 가능한 음성 합성 모델을 선택하세요.",
     "source_kicker": "소스 클립",
     "drop_audio": "변환할 클립을 끌어다 놓거나 클릭하세요. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "실시간 사용량",
     "everyTwoSeconds": "2초마다",
     "appVram": "앱 VRAM",
-    "voiceFirst": "음성 품질 우선"
+    "voiceFirst": "음성 품질 우선",
+    "gpuUsing": "GPU 사용 중",
+    "gpuSelected": "선택됨 · 모델 로드 안 됨"
   },
   "voiceControls": {
     "title": "음성 설정",
@@ -3460,5 +3488,26 @@
     "gateIntro": "아래 각 모델을 사용하기 전에 라이선스에 동의하세요. 각각 검토한 후 확인란을 선택하세요.",
     "retryHint": "라이선스에 동의했습니다. 대기 중이던 작업이 있다면 다시 시작하세요.",
     "detailsFailed": "라이선스 세부 정보를 불러오지 못했습니다. 이 대화 상자를 닫고 다시 시도하세요."
+  }
+,
+  "convertProgress": {
+    "title": "변환 진행 상황",
+    "analyzing": "오디오 분석 중",
+    "diffusion": "노래 변환 중",
+    "vocoder": "파형 생성 중",
+    "validating": "오디오 확인 중",
+    "marking": "합성 오디오 식별 정보 적용 중",
+    "cancelling": "취소 요청됨; 처리가 중지될 때까지 기다리는 중…",
+    "cancelled": "취소 확인됨 — 처리가 중지되었습니다.",
+    "completed": "변환 완료",
+    "stage_progress": "현재 단계의 진행 상황",
+    "steps": "구간 {{chunk}} · 단계 {{step}}/{{total}} · 현재 단계의 {{percent}}%",
+    "eta": "현재 단계의 예상 남은 시간: {{time}}",
+    "eta_unknown": "아직 남은 시간을 추정할 수 없습니다",
+    "stage_scope": "백분율과 예상 시간은 전체 변환이 아닌 현재 단계에 해당합니다.",
+    "stalled": "30분 동안 진행이 없어 노래 변환을 중지했습니다. 프로세스가 종료되었습니다. 더 짧은 구간으로 다시 시도하세요.",
+    "cpu_limit": "CPU 스레드: {{threads}}; 우선순위 낮춤.",
+    "cancel_unknown": "취소를 확인하지 못했습니다. 상태를 확인하거나 다시 취소해 주세요.",
+    "status_unknown": "진행 상황을 확인할 수 없습니다. 처리가 계속 실행 중일 수 있습니다."
   }
 }

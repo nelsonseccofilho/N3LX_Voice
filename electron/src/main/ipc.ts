@@ -1,3 +1,4 @@
+import { ConversionDestinations, conversionDefaultPath } from './conversion-destinations';
 import { registerSiteBrowser } from './site-browser';
 import { portableFilename } from './portable-filename';
 import { saveFiltersFor } from './save-filters';
@@ -72,6 +73,8 @@ export const CHANNELS = {
   maintenanceRelocationProgress: 'maintenance:relocationProgress',
   maintenanceScanUninstall: 'maintenance:scanUninstall',
   maintenancePurgeUninstall: 'maintenance:purgeUninstall',
+  filesChooseConversionDestination: 'files:chooseConversionDestination',
+  filesSaveConversion: 'files:saveConversion',
   filesSaveAudio: 'files:saveAudio',
   filesSaveData: 'files:saveData',
   filesRevealPath: 'files:revealPath',
@@ -561,6 +564,51 @@ export function registerIpc(
     return authorizeModelsDirectory(await backendDataDirectory(supervisor), selected);
   });
 
+  const conversionDestinations = new ConversionDestinations();
+  ipcMain.handle(
+    CHANNELS.filesChooseConversionDestination,
+    async (event, raw: { name: string; sourcePath?: string }) => {
+      const owner = windowFor(event) ?? getMainWindow();
+      assertTrustedMainFrame(event, owner);
+      const name = assertString(raw?.name, 'source name');
+      const source =
+        typeof raw.sourcePath === 'string' && isAbsolute(raw.sourcePath) ? raw.sourcePath : '';
+      const picked = await dialog.showSaveDialog(
+        owner,
+        securityScopedDialogOptions<Electron.SaveDialogOptions>({
+          defaultPath: conversionDefaultPath(name, source, app.getPath('downloads')),
+          filters: [{ name: 'WAV', extensions: ['wav'] }],
+        }),
+      );
+      if (picked.canceled || !picked.filePath) return null;
+      return conversionDestinations.authorize(
+        event.sender.id,
+        picked.filePath,
+        picked.bookmark,
+        source,
+      );
+    },
+  );
+  ipcMain.handle(
+    CHANNELS.filesSaveConversion,
+    async (event, raw: { token: string; url: string }) => {
+      const owner = windowFor(event) ?? getMainWindow();
+      assertTrustedMainFrame(event, owner);
+      const token = assertString(raw?.token, 'destination token');
+      const source = resolveBackendDownloadUrl(
+        assertString(raw?.url, 'audio url'),
+        supervisor.baseUrl,
+      );
+      return conversionDestinations.save(event.sender.id, token, async () => {
+        const res = await net.fetch(source, {
+          headers: supervisor.requestHeaders(),
+          bypassCustomProtocolHandlers: true,
+        });
+        if (!res.ok) throw new Error(await downloadFailureMessage(res));
+        return new Uint8Array(await res.arrayBuffer());
+      });
+    },
+  );
   ipcMain.handle(CHANNELS.filesSaveAudio, async (event, raw: unknown): Promise<SaveAudioResult> => {
     const owner = windowFor(event) ?? getMainWindow();
     assertTrustedMainFrame(event, owner);

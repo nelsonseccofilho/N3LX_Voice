@@ -2513,7 +2513,33 @@
     "copied": "已複製",
     "tailscale_qr_alt": "Tailscale URL 的二維碼"
   },
+  "convertOptions": {
+    "cpu_hint": "語音模型將在 CPU 上執行。",
+    "compute": "語音模型處理",
+    "compute_hint": "GPU 使用可用的加速功能；部分階段仍由 CPU 執行。",
+    "output": "輸出檔案",
+    "output_hint": "轉換前請選擇儲存位置。建議使用來源資料夾與 {{name}}。錄音請選擇資料夾。",
+    "unavailable": "此模型不支援選擇裝置，將使用目前設定。"
+  },
   "convert": {
+    "saved_in_app": "應用程式歷程記錄中的副本",
+    "save_hint": "完成的音訊會儲存在應用程式歷程記錄中，清理歷程記錄時可能會被刪除。使用「另存新檔…」為另一份副本選擇名稱和資料夾。",
+    "target_selected": "已選目標聲音",
+    "target_required": "轉換前請選擇目標聲音。",
+    "no_singing_model": "此安裝中沒有可用的歌聲模型。",
+    "singing_model": "歌聲模型",
+    "model_required": "必選",
+    "model_required_hint": "轉換前必須選擇相容的模型。聲音設定檔需另外選擇。",
+    "select_model": "選擇模型",
+    "audio_type": "音訊類型",
+    "speech": "說話",
+    "singing": "唱歌",
+    "speech_hint": "辨識文字並用所選聲音產生語音。不保留歌曲旋律。",
+    "singing_hint": "在保留旋律和節奏的同時轉換歌聲，需要專用的歌聲引擎。",
+    "singing_reference_required": "歌聲轉換需要所選聲音設定中的參考音訊。",
+    "singing_unavailable": "尚未設定歌聲轉換。不會使用語音模型。",
+    "speech_model": "語音模型",
+    "change_model": "更換模型",
     "cloning_required": "請選擇已就緒且支援聲音複製的語音合成模型。",
     "source_kicker": "來源音訊",
     "drop_audio": "拖入要轉換的音訊 — 或點擊。WAV、MP3、M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "即時用量",
     "everyTwoSeconds": "每 2 秒更新",
     "appVram": "應用程式顯示記憶體",
-    "voiceFirst": "優先確保語音品質"
+    "voiceFirst": "優先確保語音品質",
+    "gpuUsing": "GPU 使用中",
+    "gpuSelected": "已選取 · 模型尚未載入"
   },
   "voiceControls": {
     "title": "語音控制",
@@ -3460,5 +3488,26 @@
     "gateIntro": "使用下列每個模型之前，請先接受其授權。請逐一檢視，然後勾選對應的核取方塊。",
     "retryHint": "已接受授權。如有等待中的操作，請重新開始。",
     "detailsFailed": "無法載入授權詳細資料。請關閉此對話方塊後再試一次。"
+  }
+,
+  "convertProgress": {
+    "title": "轉換進度",
+    "analyzing": "正在分析音訊",
+    "diffusion": "正在轉換歌聲",
+    "vocoder": "正在產生波形",
+    "validating": "正在驗證音訊",
+    "marking": "正在加入合成音訊識別",
+    "cancelling": "已要求取消，正在等待處理停止…",
+    "cancelled": "已確認取消，處理已停止。",
+    "completed": "轉換已完成",
+    "stage_progress": "目前階段進度",
+    "steps": "片段 {{chunk}} · 步驟 {{step}}/{{total}} · 目前階段的 {{percent}}%",
+    "eta": "目前階段預估剩餘時間：{{time}}",
+    "eta_unknown": "暫時無法估算剩餘時間",
+    "stage_scope": "百分比與預估時間僅對應目前階段，不代表整個轉換。",
+    "stalled": "歌聲轉換因30分鐘無進展而停止。處理程序已結束。請嘗試更短的片段。",
+    "cpu_limit": "CPU 執行緒數：{{threads}}；降低優先順序。",
+    "cancel_unknown": "無法確認取消。請檢查狀態或再次嘗試取消。",
+    "status_unknown": "無法取得進度狀態，處理可能仍在執行。"
   }
 }

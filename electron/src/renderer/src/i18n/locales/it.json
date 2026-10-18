@@ -2515,7 +2515,33 @@
     "copied": "Copiato",
     "tailscale_qr_alt": "Codice QR per l'URL Tailscale"
   },
+  "convertOptions": {
+    "cpu_hint": "Il modello vocale verrà eseguito sulla CPU.",
+    "compute": "Elaborazione del modello vocale",
+    "compute_hint": "GPU usa l’accelerazione disponibile; alcune fasi restano sulla CPU.",
+    "output": "File di uscita",
+    "output_hint": "Scegli la destinazione prima di convertire. Sono suggeriti la cartella di origine e {{name}}. Per le registrazioni, scegli una cartella.",
+    "unavailable": "La scelta del dispositivo non è disponibile per questo modello; verrà usata la configurazione attuale."
+  },
   "convert": {
+    "saved_in_app": "Copia nella cronologia dell’app",
+    "save_hint": "L’audio completato resta nella cronologia e può essere eliminato durante la pulizia. Usa Salva con nome… per scegliere nome e cartella di una copia separata.",
+    "target_selected": "Voce di destinazione selezionata",
+    "target_required": "Seleziona una voce di destinazione prima di convertire.",
+    "no_singing_model": "Nessun modello di canto disponibile in questa installazione.",
+    "singing_model": "Modello di canto",
+    "model_required": "Obbligatorio",
+    "model_required_hint": "Prima di convertire è necessario selezionare un modello compatibile. Il profilo vocale si sceglie separatamente.",
+    "select_model": "Seleziona modello",
+    "audio_type": "Tipo di audio",
+    "speech": "Parlato",
+    "singing": "Canto",
+    "speech_hint": "Riconosce le parole e genera parlato con la voce selezionata. Non conserva le melodie cantate.",
+    "singing_hint": "Cambiare una voce cantata mantenendo melodia e ritmo richiede un motore dedicato al canto.",
+    "singing_reference_required": "La conversione del canto richiede un audio di riferimento nel profilo vocale selezionato.",
+    "singing_unavailable": "La conversione del canto non è ancora configurata. Il modello del parlato non verrà usato.",
+    "speech_model": "Modello del parlato",
+    "change_model": "Cambia modello",
     "cloning_required": "Scegli un modello di sintesi vocale pronto che supporti la clonazione della voce.",
     "source_kicker": "Clip sorgente",
     "drop_audio": "Trascina qui il clip da convertire — o fai clic. WAV, MP3, M4A…",
@@ -3307,7 +3333,9 @@
     "liveUsage": "Utilizzo attuale",
     "everyTwoSeconds": "Ogni 2 s",
     "appVram": "VRAM dell’app",
-    "voiceFirst": "Priorità alla qualità vocale"
+    "voiceFirst": "Priorità alla qualità vocale",
+    "gpuUsing": "GPU in uso",
+    "gpuSelected": "Selezionato · modello non caricato"
   },
   "voiceControls": {
     "title": "Controlli vocali",
@@ -3462,5 +3490,26 @@
     "gateIntro": "Accetta la licenza di ciascun modello qui sotto prima di usarlo. Esaminale una per una, quindi spunta la relativa casella.",
     "retryHint": "Licenze accettate. Se un'operazione era in attesa, avviala di nuovo.",
     "detailsFailed": "Impossibile caricare i dettagli della licenza. Chiudi questa finestra e riprova."
+  }
+,
+  "convertProgress": {
+    "title": "Avanzamento conversione",
+    "analyzing": "Analisi audio",
+    "diffusion": "Conversione del canto",
+    "vocoder": "Generazione della forma d’onda",
+    "validating": "Verifica audio",
+    "marking": "Identificazione dell’audio sintetico",
+    "cancelling": "Annullamento richiesto; attesa dell’arresto…",
+    "cancelled": "Annullamento confermato: elaborazione arrestata.",
+    "completed": "Conversione completata",
+    "stage_progress": "Avanzamento della fase attuale",
+    "steps": "Sezione {{chunk}} · passo {{step}}/{{total}} · {{percent}}% della fase",
+    "eta": "Tempo residuo stimato per questa fase: {{time}}",
+    "eta_unknown": "Stima del tempo non ancora disponibile",
+    "stage_scope": "Percentuale e stima si riferiscono a questa fase, non all’intera conversione.",
+    "stalled": "La conversione del canto si è fermata dopo 30 minuti senza progressi. Il processo è terminato. Prova un estratto più breve.",
+    "cpu_limit": "Thread CPU: {{threads}}; priorità ridotta.",
+    "cancel_unknown": "Impossibile confermare l’annullamento. Controlla lo stato o riprova.",
+    "status_unknown": "Avanzamento non disponibile; l’elaborazione potrebbe essere ancora attiva."
   }
 }

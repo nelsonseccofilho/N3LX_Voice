@@ -2515,7 +2515,33 @@
     "copied": "Copié",
     "tailscale_qr_alt": "Code QR pour l'URL Tailscale"
   },
+  "convertOptions": {
+    "cpu_hint": "Le modèle vocal sera exécuté sur le CPU.",
+    "compute": "Traitement du modèle vocal",
+    "compute_hint": "GPU utilise l’accélération disponible ; certaines étapes utilisent encore le CPU.",
+    "output": "Fichier de sortie",
+    "output_hint": "Choisissez la destination avant de convertir. Le dossier source et {{name}} sont proposés. Pour les enregistrements, choisissez un dossier.",
+    "unavailable": "Le choix du périphérique est indisponible pour ce modèle ; son réglage actuel sera utilisé."
+  },
   "convert": {
+    "saved_in_app": "Copie dans l’historique de l’application",
+    "save_hint": "L’audio terminé reste dans l’historique et peut être supprimé lors de son nettoyage. Utilisez Enregistrer sous… pour choisir le nom et le dossier d’une copie indépendante.",
+    "target_selected": "Voix cible sélectionnée",
+    "target_required": "Sélectionnez une voix cible avant la conversion.",
+    "no_singing_model": "Aucun modèle de chant n’est disponible dans cette installation.",
+    "singing_model": "Modèle de chant",
+    "model_required": "Obligatoire",
+    "model_required_hint": "Un modèle compatible doit être sélectionné avant la conversion. Le profil de voix se choisit séparément.",
+    "select_model": "Sélectionner un modèle",
+    "audio_type": "Type audio",
+    "speech": "Parole",
+    "singing": "Chant",
+    "speech_hint": "Reconnaît les mots et génère de la parole avec la voix choisie. Ne conserve pas la mélodie chantée.",
+    "singing_hint": "Changer une voix chantée en conservant la mélodie et le rythme nécessite un moteur de chant dédié.",
+    "singing_reference_required": "La conversion de chant nécessite un audio de référence dans le profil vocal sélectionné.",
+    "singing_unavailable": "La conversion du chant n’est pas encore configurée. Le modèle de parole ne sera pas utilisé.",
+    "speech_model": "Modèle de parole",
+    "change_model": "Changer de modèle",
     "cloning_required": "Choisissez un modèle de synthèse vocale prêt à utiliser qui prend en charge le clonage vocal.",
     "source_kicker": "Clip source",
     "drop_audio": "Déposez le clip à convertir — ou cliquez. WAV, MP3, M4A…",
@@ -3307,7 +3333,9 @@
     "liveUsage": "Utilisation en direct",
     "everyTwoSeconds": "Toutes les 2 s",
     "appVram": "VRAM de l’appli",
-    "voiceFirst": "Priorité à la qualité vocale"
+    "voiceFirst": "Priorité à la qualité vocale",
+    "gpuUsing": "GPU utilisé",
+    "gpuSelected": "Sélectionné · modèle non chargé"
   },
   "voiceControls": {
     "title": "Réglages de la voix",
@@ -3462,5 +3490,26 @@
     "gateIntro": "Acceptez la licence de chaque modèle ci-dessous avant de l'utiliser. Consultez-les une par une, puis cochez la case correspondante.",
     "retryHint": "Licences acceptées. Si une action attendait cette acceptation, relancez-la.",
     "detailsFailed": "Impossible de charger les détails de la licence. Fermez cette boîte de dialogue et réessayez."
+  }
+,
+  "convertProgress": {
+    "title": "Progression de conversion",
+    "analyzing": "Analyse audio",
+    "diffusion": "Conversion du chant",
+    "vocoder": "Génération de la forme d’onde",
+    "validating": "Vérification audio",
+    "marking": "Identification de l’audio synthétique",
+    "cancelling": "Annulation demandée ; attente de l’arrêt du traitement…",
+    "cancelled": "Annulation confirmée : traitement arrêté.",
+    "completed": "Conversion terminée",
+    "stage_progress": "Progression de l’étape actuelle",
+    "steps": "Extrait {{chunk}} · pas {{step}}/{{total}} · {{percent}} % de cette étape",
+    "eta": "Temps restant estimé pour cette étape : {{time}}",
+    "eta_unknown": "Estimation du temps indisponible pour le moment",
+    "stage_scope": "Le pourcentage et l’estimation concernent cette étape, pas toute la conversion.",
+    "stalled": "La conversion du chant a été arrêtée après 30 minutes sans progression. Le processus est terminé. Essayez un extrait plus court.",
+    "cpu_limit": "Threads CPU : {{threads}} ; priorité réduite.",
+    "cancel_unknown": "Impossible de confirmer l’annulation. Vérifiez l’état ou réessayez.",
+    "status_unknown": "Progression indisponible ; le traitement peut être encore en cours."
   }
 }

@@ -1,0 +1,18 @@
+# Optional isolated Seed-VC environment, not VoiceStudio's application venv.
+# Explicit Windows DirectML opt-in; install in a separate environment.
+torch==2.4.1
+torchaudio==2.4.1
+torchvision==0.19.1
+numpy==1.26.4
+scipy==1.13.1
+librosa==0.10.2
+munch==4.0.0
+einops==0.8.0
+transformers==4.46.3
+huggingface-hub==0.36.0
+soundfile==0.12.1
+pyyaml==6.0.3
+accelerate==1.15.0
+descript-audio-codec==1.0.0
+
+torch-directml==0.2.5.dev240914

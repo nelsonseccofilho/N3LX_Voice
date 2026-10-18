@@ -3,6 +3,12 @@ import { apiJson } from '@/lib/api/client';
 import { useBackendStatus } from './use-backend-status';
 import { isBackendReachable } from '@shared/utils/backendStage';
 
+export interface NativeGpuRuntime {
+  provider: string;
+  device_name: string | null;
+  verified: boolean;
+}
+
 export interface DeviceUsage {
   cpu: number;
   cpu_model: string;
@@ -16,6 +22,7 @@ export interface DeviceUsage {
   vram: number;
   total_vram: number;
   gpu_active: boolean;
+  tts_runtime?: NativeGpuRuntime | null;
 }
 
 /** Share one local telemetry query; poll only while a usage panel is open. */

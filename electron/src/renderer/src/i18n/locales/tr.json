@@ -2513,7 +2513,33 @@
     "copied": "Kopyalandı",
     "tailscale_qr_alt": "Kuyruk Ölçeği URL'si için QR kodu"
   },
+  "convertOptions": {
+    "cpu_hint": "Ses modeli CPU üzerinde çalışacaktır.",
+    "compute": "Ses modeli işleme",
+    "compute_hint": "GPU kullanılabilir hızlandırmayı kullanır; bazı aşamalar CPU üzerinde çalışır.",
+    "output": "Çıktı dosyası",
+    "output_hint": "Dönüştürmeden önce hedefi seçin. Kaynak klasör ve {{name}} önerilir. Kayıtlar için bir klasör seçin.",
+    "unavailable": "Bu modelde cihaz seçimi kullanılamaz; mevcut ayar kullanılacaktır."
+  },
   "convert": {
+    "saved_in_app": "Uygulama geçmişindeki kopya",
+    "save_hint": "Tamamlanan ses uygulama geçmişinde tutulur ve geçmiş temizlenirken silinebilir. Ayrı bir kopyanın adını ve klasörünü seçmek için Farklı kaydet… seçeneğini kullanın.",
+    "target_selected": "Seçilen hedef ses",
+    "target_required": "Dönüştürmeden önce bir hedef ses seçin.",
+    "no_singing_model": "Bu kurulumda kullanılabilir bir şarkı modeli yok.",
+    "singing_model": "Şarkı modeli",
+    "model_required": "Zorunlu",
+    "model_required_hint": "Dönüştürmeden önce uyumlu bir model seçilmelidir. Ses profili ayrıca seçilir.",
+    "select_model": "Model seç",
+    "audio_type": "Ses türü",
+    "speech": "Konuşma",
+    "singing": "Şarkı",
+    "speech_hint": "Kelimeleri tanır ve seçilen sesle konuşma üretir. Şarkı melodisini korumaz.",
+    "singing_hint": "Melodi ve ritmi koruyarak şarkı sesini değiştirmek için özel bir şarkı motoru gerekir.",
+    "singing_reference_required": "Şarkı dönüşümü için seçilen ses profilinde referans ses gerekir.",
+    "singing_unavailable": "Şarkı dönüştürme henüz yapılandırılmadı. Konuşma modeli kullanılmayacak.",
+    "speech_model": "Konuşma modeli",
+    "change_model": "Modeli değiştir",
     "cloning_required": "Ses klonlamayı destekleyen, kullanıma hazır bir metinden konuşmaya modeli seçin.",
     "source_kicker": "Kaynak klip",
     "drop_audio": "Dönüştürülecek klibi bırakın — veya tıklayın. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Anlık kullanım",
     "everyTwoSeconds": "Her 2 sn",
     "appVram": "Uygulama VRAM’i",
-    "voiceFirst": "Önce ses kalitesi"
+    "voiceFirst": "Önce ses kalitesi",
+    "gpuUsing": "GPU kullanılıyor",
+    "gpuSelected": "Seçildi · model yüklenmedi"
   },
   "voiceControls": {
     "title": "Ses kontrolleri",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Kullanmadan önce aşağıdaki her modelin lisansını kabul edin. Her birini inceleyin, ardından kutusunu işaretleyin.",
     "retryHint": "Lisanslar kabul edildi. Bunu bekleyen bir işlem varsa yeniden başlatın.",
     "detailsFailed": "Lisans ayrıntıları yüklenemedi. Bu pencereyi kapatıp yeniden deneyin."
+  }
+,
+  "convertProgress": {
+    "title": "Dönüştürme ilerlemesi",
+    "analyzing": "Ses analiz ediliyor",
+    "diffusion": "Şarkı dönüştürülüyor",
+    "vocoder": "Dalga biçimi oluşturuluyor",
+    "validating": "Ses doğrulanıyor",
+    "marking": "Sentetik ses kimliği ekleniyor",
+    "cancelling": "İptal istendi; işlemin durması bekleniyor…",
+    "cancelled": "İptal onaylandı — işlem durduruldu.",
+    "completed": "Dönüştürme tamamlandı",
+    "stage_progress": "Geçerli aşamanın ilerlemesi",
+    "steps": "Bölüm {{chunk}} · adım {{step}}/{{total}} · bu aşamanın %{{percent}} oranı",
+    "eta": "Bu aşamanın tahmini kalan süresi: {{time}}",
+    "eta_unknown": "Süre tahmini henüz kullanılamıyor",
+    "stage_scope": "Yüzde ve tahmin, tüm dönüştürme için değil bu aşama içindir.",
+    "stalled": "Şarkı dönüşümü, 30 dakika ilerleme olmadığı için durduruldu. İşlem sonlandırıldı. Daha kısa bir bölüm deneyin.",
+    "cpu_limit": "CPU iş parçacıkları: {{threads}}; düşük öncelik.",
+    "cancel_unknown": "İptal onaylanamadı. Durumu kontrol edin veya yeniden iptal etmeyi deneyin.",
+    "status_unknown": "İlerleme durumu alınamıyor; işlem hâlâ sürüyor olabilir."
   }
 }

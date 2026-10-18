@@ -2513,7 +2513,33 @@
     "copied": "Kopiert",
     "tailscale_qr_alt": "QR-Code für die Tailscale-URL"
   },
+  "convertOptions": {
+    "cpu_hint": "Das Sprachmodell wird auf der CPU ausgeführt.",
+    "compute": "Verarbeitung des Sprachmodells",
+    "compute_hint": "GPU nutzt die verfügbare Beschleunigung; einige Schritte laufen weiterhin auf der CPU.",
+    "output": "Ausgabedatei",
+    "output_hint": "Wählen Sie vor der Konvertierung das Ziel. Quellordner und {{name}} werden vorgeschlagen. Wählen Sie bei Aufnahmen einen Ordner.",
+    "unavailable": "Für dieses Modell ist keine Geräteauswahl verfügbar; die aktuelle Einstellung wird verwendet."
+  },
   "convert": {
+    "saved_in_app": "Kopie im App-Verlauf",
+    "save_hint": "Fertiges Audio bleibt im App-Verlauf und kann beim Bereinigen gelöscht werden. Mit Speichern unter… wählen Sie Namen und Ordner für eine separate Kopie.",
+    "target_selected": "Ausgewählte Zielstimme",
+    "target_required": "Wähle vor der Konvertierung eine Zielstimme aus.",
+    "no_singing_model": "In dieser Installation ist kein Gesangsmodell verfügbar.",
+    "singing_model": "Gesangsmodell",
+    "model_required": "Erforderlich",
+    "model_required_hint": "Vor der Konvertierung muss ein kompatibles Modell ausgewählt werden. Das Stimmprofil wird separat gewählt.",
+    "select_model": "Modell auswählen",
+    "audio_type": "Audiotyp",
+    "speech": "Sprache",
+    "singing": "Gesang",
+    "speech_hint": "Erkennt die Wörter und erzeugt Sprache mit der ausgewählten Stimme. Gesungene Melodien bleiben nicht erhalten.",
+    "singing_hint": "Um eine Gesangsstimme unter Beibehaltung von Melodie und Rhythmus zu ändern, ist eine spezielle Gesangsengine erforderlich.",
+    "singing_reference_required": "Die Gesangsumwandlung erfordert Referenzaudio im ausgewählten Stimmprofil.",
+    "singing_unavailable": "Die Gesangskonvertierung ist noch nicht eingerichtet. Das Sprachmodell wird nicht verwendet.",
+    "speech_model": "Sprachmodell",
+    "change_model": "Modell ändern",
     "cloning_required": "Wähle ein einsatzbereites Sprachsynthesemodell, das Stimmenklonen unterstützt.",
     "source_kicker": "Quellclip",
     "drop_audio": "Clip zum Konvertieren hier ablegen — oder klicken. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Aktuelle Auslastung",
     "everyTwoSeconds": "Alle 2 s",
     "appVram": "App-VRAM",
-    "voiceFirst": "Sprachqualität zuerst"
+    "voiceFirst": "Sprachqualität zuerst",
+    "gpuUsing": "GPU wird verwendet",
+    "gpuSelected": "Ausgewählt · Modell nicht geladen"
   },
   "voiceControls": {
     "title": "Stimmeinstellungen",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Akzeptiere die Lizenz jedes unten aufgeführten Modells, bevor du es verwendest. Prüfe jede einzelne und setze dann das jeweilige Häkchen.",
     "retryHint": "Lizenzen akzeptiert. Falls etwas darauf gewartet hat, starte es erneut.",
     "detailsFailed": "Die Lizenzdetails konnten nicht geladen werden. Schließe diesen Dialog und versuche es erneut."
+  }
+,
+  "convertProgress": {
+    "title": "Konvertierungsfortschritt",
+    "analyzing": "Audio wird analysiert",
+    "diffusion": "Gesang wird konvertiert",
+    "vocoder": "Wellenform wird erzeugt",
+    "validating": "Audio wird geprüft",
+    "marking": "Kennzeichnung synthetischer Audiodaten",
+    "cancelling": "Abbruch angefordert; Verarbeitung wird beendet…",
+    "cancelled": "Abbruch bestätigt – Verarbeitung beendet.",
+    "completed": "Konvertierung abgeschlossen",
+    "stage_progress": "Fortschritt der aktuellen Phase",
+    "steps": "Abschnitt {{chunk}} · Schritt {{step}}/{{total}} · {{percent}} % dieser Phase",
+    "eta": "Geschätzte Restzeit dieser Phase: {{time}}",
+    "eta_unknown": "Zeitschätzung noch nicht verfügbar",
+    "stage_scope": "Prozent und Schätzung gelten für diese Phase, nicht für die gesamte Konvertierung.",
+    "stalled": "Die Gesangsumwandlung wurde nach 30 Minuten ohne Fortschritt gestoppt. Der Prozess wurde beendet. Versuche einen kürzeren Ausschnitt.",
+    "cpu_limit": "CPU-Threads: {{threads}}; verringerte Priorität.",
+    "cancel_unknown": "Abbruch nicht bestätigt. Status prüfen oder erneut abbrechen.",
+    "status_unknown": "Fortschritt nicht verfügbar; die Verarbeitung läuft möglicherweise weiter."
   }
 }

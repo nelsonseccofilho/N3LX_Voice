@@ -204,6 +204,7 @@ def test_convert_happy_path(client, monkeypatch, clone_profile):
     from core.config import OUTPUTS_DIR
     take = body["audio_url"].rsplit("/", 1)[-1]
     assert os.path.isfile(os.path.join(OUTPUTS_DIR, take))
+    assert body["output_path"] == os.path.abspath(os.path.join(OUTPUTS_DIR, take))
     with db_conn() as conn:
         row = conn.execute(
             "SELECT mode, profile_id FROM generation_history WHERE id=?",
@@ -559,3 +560,136 @@ def test_convert_router_is_registered():
     snapshot = os.path.join(os.path.dirname(__file__), "fixtures", "api_routes.txt")
     with open(snapshot, encoding="utf-8") as f:
         assert "POST /convert\n" in f.read()
+
+
+def test_singing_never_enters_speech_pipeline(client, monkeypatch, _init_db):
+    from services import tts_backend
+    def forbidden(**kwargs):
+        raise AssertionError("Singing must not load a speech engine")
+    monkeypatch.setattr(tts_backend, "resolve_generation_backend", forbidden)
+    response = _post_convert(client, "unused", mode="singing")
+    assert response.status_code == 409
+    assert response.json()["detail"]["error"] == "singing_engine_unavailable"
+
+
+def test_unknown_conversion_mode_is_rejected(client, _init_db):
+    assert _post_convert(client, "unused", mode="unknown").status_code == 422
+
+
+@pytest.mark.parametrize("device,compute", [("cpu","cpu"),("directml","gpu"),("directml","auto")])
+def test_singing_uses_seed_vc_without_speech_models(client, monkeypatch, clone_profile, device, compute):
+    from engines import seed_vc
+    from services import tts_backend, asr_backend
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Singing must not invoke ASR or TTS")
+    monkeypatch.setattr(tts_backend,'resolve_generation_backend',forbidden)
+    monkeypatch.setattr(asr_backend,'load_active_asr_backend',forbidden)
+    monkeypatch.setattr(seed_vc,'status',lambda:{'available':True,'id':'seed-vc-svc','display_name':'Seed-VC SVC','device':device,'compute_options':['cpu','gpu']})
+    calls=[]
+    def render(source, reference, **kwargs):
+        calls.append((source,reference,kwargs))
+        return torch.zeros(1,44100),44100
+    monkeypatch.setattr(seed_vc,'convert',render)
+    response=_post_convert(client,clone_profile,mode='singing',match_duration='0',compute=compute)
+    assert response.status_code==200,response.text
+    assert response.json()['duration_s']==pytest.approx(1)
+    assert response.json()['engine_id']=='seed-vc-svc'
+    assert response.json()['device']==device
+    from core.config import OUTPUTS_DIR
+    path = response.json()['output_path']
+    assert os.path.dirname(path) == os.path.abspath(OUTPUTS_DIR)
+    assert os.path.isfile(path)
+    assert response.json()['text']==''
+    assert len(calls)==1
+    if compute != 'auto': assert calls[0][2]['compute']==compute
+
+
+def test_singing_requires_audio_reference(client, monkeypatch, _init_db):
+    from engines import seed_vc
+    from core.db import db_conn
+    pid = "singing-no-reference-" + uuid.uuid4().hex[:8]
+    with db_conn() as conn:
+        conn.execute("INSERT INTO voice_profiles (id,name,kind,instruct,created_at) VALUES (?,?,?,?,?)",
+                     (pid, "Design without sample", "design", "Natural voice", 0.0))
+    monkeypatch.setattr(seed_vc, "status", lambda: {"available": True})
+    try:
+        response = _post_convert(client, pid, mode="singing")
+        assert response.status_code == 422
+        assert response.json()["detail"]["error"] == "singing_reference_required"
+    finally:
+        _delete_profile_and_takes(pid)
+
+
+def test_conversion_model_status_is_local(client, monkeypatch):
+    from engines import seed_vc
+    monkeypatch.delenv(seed_vc.ROOT_ENV, raising=False)
+    response = client.get("/convert/models")
+    assert response.status_code == 200
+    assert response.json()["singing"]["available"] is False
+
+
+def test_singing_http_disconnect_cancels_the_operation():
+    cancelled = []
+    class Disconnected:
+        async def is_disconnected(self): return True
+    async def long_operation():
+        try:
+            await asyncio.sleep(60)
+        finally:
+            cancelled.append(True)
+    async def scenario():
+        with pytest.raises(HTTPException) as exc:
+            await _vc_mod()._while_connected(Disconnected(), long_operation())
+        assert exc.value.status_code == 499
+    asyncio.run(scenario())
+    assert cancelled == [True]
+
+
+@pytest.mark.parametrize('compute', ['cpu','gpu'])
+def test_speech_compute_choice_runs_inside_worker_context(client,monkeypatch,clone_profile,compute):
+    from contextlib import contextmanager
+    base=_make_fake_engine('fake-device-'+uuid.uuid4().hex[:6])
+    events=[]
+    class Selectable(base):
+        supports_compute_selection=True
+        @contextmanager
+        def conversion_device(self, choice):
+            events.append(('enter',choice))
+            try: yield
+            finally: events.append(('exit',choice))
+        def generate(self,text,**kw):
+            assert events == [('enter',compute)]
+            return super().generate(text,**kw)
+    _wire_stubs(monkeypatch,engine_cls=Selectable,asr=_FakeASR({'text':'Hello world','segments':[]}))
+    response=_post_convert(client,clone_profile,compute=compute,match_duration='0')
+    assert response.status_code==200,response.text
+    assert events == [('enter',compute),('exit',compute)]
+
+
+def test_unknown_compute_is_rejected(client,_init_db):
+    assert _post_convert(client,'unused',compute='invalid').status_code==422
+
+
+def test_singing_does_not_use_the_generic_fixed_compute_budget(client, monkeypatch, clone_profile):
+    from engines import seed_vc
+    from services import model_manager
+    monkeypatch.setattr(seed_vc,'status',lambda:{'available':True,'device':'cpu'})
+    monkeypatch.setattr(seed_vc,'convert',lambda *args,**kwargs:(torch.zeros(1,4410),44100))
+    async def guard(fn, **kwargs):
+        assert kwargs['timeout'] == float('inf')
+        return fn()
+    monkeypatch.setattr(model_manager,'run_on_gpu_pool_guarded',guard)
+    response=_post_convert(client,clone_profile,mode='singing',match_duration='0')
+    assert response.status_code == 200, response.text
+
+
+def test_singing_idle_failure_has_specific_stopped_process_message(client, monkeypatch, clone_profile):
+    from engines import seed_vc
+    monkeypatch.setattr(seed_vc,'status',lambda:{'available':True,'device':'cpu'})
+    def stalled(*args,**kwargs):
+        raise seed_vc.SingingProgressTimeout('no progress')
+    monkeypatch.setattr(seed_vc,'convert',stalled)
+    response=_post_convert(client,clone_profile,mode='singing',match_duration='0')
+    assert response.status_code == 504
+    assert response.json()['detail']['error'] == 'singing_progress_timeout'
+    assert 'cannot be killed' not in response.text

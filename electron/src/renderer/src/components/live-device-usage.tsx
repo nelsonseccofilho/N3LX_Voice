@@ -1,3 +1,4 @@
+import { GpuRuntimeSummary } from './gpu-runtime-summary';
 import { useTranslation } from 'react-i18next';
 import { useDeviceUsage } from '@/hooks/use-device-usage';
 import { useBackendStatus } from '@/hooks/use-backend-status';
@@ -32,6 +33,7 @@ export function LiveDeviceUsage({ open }: { open: boolean }) {
       : unavailable;
   const ratio = (used: number | null | undefined, total = 100) =>
     valid(used) && valid(total) && total > 0 ? Math.min(100, (used / total) * 100) : null;
+  const nativeFallback = data?.tts_runtime && !valid(data.gpu_utilization);
   const metrics = [
     { label: t('settings.device_family_cpu'), value: usage(data?.cpu), fill: ratio(data?.cpu) },
     {
@@ -55,7 +57,9 @@ export function LiveDeviceUsage({ open }: { open: boolean }) {
       value: memory(data?.vram, data?.total_vram),
       fill: data ? ratio(data.vram, data.total_vram) : null,
     },
-  ];
+  ].filter(
+    (_, index) => !nativeFallback || (index !== 1 && (index !== 3 || (data?.total_vram ?? 0) > 0)),
+  );
   return (
     <section
       aria-label={t('performanceHardware.liveUsage')}
@@ -100,6 +104,7 @@ export function LiveDeviceUsage({ open }: { open: boolean }) {
           </div>
         ))}
       </dl>
+      {nativeFallback && <GpuRuntimeSummary runtime={data!.tts_runtime!} />}
     </section>
   );
 }

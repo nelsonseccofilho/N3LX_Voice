@@ -2513,7 +2513,33 @@
     "copied": "Disalin",
     "tailscale_qr_alt": "Kode QR untuk URL Tailscale"
   },
+  "convertOptions": {
+    "cpu_hint": "Model suara akan dijalankan pada CPU.",
+    "compute": "Pemrosesan model suara",
+    "compute_hint": "GPU memakai akselerasi yang tersedia; beberapa tahap tetap memakai CPU.",
+    "output": "Berkas keluaran",
+    "output_hint": "Pilih tujuan sebelum mengonversi. Folder sumber dan {{name}} disarankan. Untuk rekaman, pilih folder.",
+    "unavailable": "Pemilihan perangkat tidak tersedia untuk model ini; pengaturan saat ini akan digunakan."
+  },
   "convert": {
+    "saved_in_app": "Salinan dalam riwayat aplikasi",
+    "save_hint": "Audio yang selesai disimpan dalam riwayat aplikasi dan dapat dihapus saat riwayat dibersihkan. Gunakan Simpan sebagai… untuk memilih nama dan folder salinan terpisah.",
+    "target_selected": "Suara tujuan terpilih",
+    "target_required": "Pilih suara tujuan sebelum konversi.",
+    "no_singing_model": "Tidak ada model nyanyian yang tersedia dalam instalasi ini.",
+    "singing_model": "Model nyanyian",
+    "model_required": "Wajib",
+    "model_required_hint": "Model yang kompatibel harus dipilih sebelum konversi. Profil suara dipilih secara terpisah.",
+    "select_model": "Pilih model",
+    "audio_type": "Jenis audio",
+    "speech": "Ucapan",
+    "singing": "Nyanyian",
+    "speech_hint": "Mengenali kata dan menghasilkan ucapan dengan suara pilihan. Tidak mempertahankan melodi nyanyian.",
+    "singing_hint": "Mengubah suara nyanyian sambil mempertahankan melodi dan ritme memerlukan mesin khusus nyanyian.",
+    "singing_reference_required": "Konversi nyanyian memerlukan audio referensi dalam profil suara yang dipilih.",
+    "singing_unavailable": "Konversi nyanyian belum dikonfigurasi. Model ucapan tidak akan digunakan.",
+    "speech_model": "Model ucapan",
+    "change_model": "Ganti model",
     "cloning_required": "Pilih model teks ke suara yang siap digunakan dan mendukung kloning suara.",
     "source_kicker": "Klip sumber",
     "drop_audio": "Letakkan klip yang akan dikonversi — atau klik. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Penggunaan saat ini",
     "everyTwoSeconds": "Setiap 2 dtk",
     "appVram": "VRAM aplikasi",
-    "voiceFirst": "Utamakan kualitas suara"
+    "voiceFirst": "Utamakan kualitas suara",
+    "gpuUsing": "GPU sedang digunakan",
+    "gpuSelected": "Dipilih · model belum dimuat"
   },
   "voiceControls": {
     "title": "Kontrol suara",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Terima lisensi setiap model di bawah sebelum menggunakannya. Tinjau masing-masing, lalu centang kotaknya.",
     "retryHint": "Lisensi diterima. Jika ada tindakan yang menunggunya, jalankan lagi.",
     "detailsFailed": "Detail lisensi tidak dapat dimuat. Tutup dialog ini dan coba lagi."
+  }
+,
+  "convertProgress": {
+    "title": "Progres konversi",
+    "analyzing": "Menganalisis audio",
+    "diffusion": "Mengonversi nyanyian",
+    "vocoder": "Membuat bentuk gelombang",
+    "validating": "Memvalidasi audio",
+    "marking": "Menambahkan identifikasi audio sintetis",
+    "cancelling": "Pembatalan diminta; menunggu pemrosesan berhenti…",
+    "cancelled": "Pembatalan dikonfirmasi — pemrosesan berhenti.",
+    "completed": "Konversi selesai",
+    "stage_progress": "Progres tahap saat ini",
+    "steps": "Bagian {{chunk}} · langkah {{step}}/{{total}} · {{percent}}% tahap ini",
+    "eta": "Perkiraan waktu tersisa pada tahap ini: {{time}}",
+    "eta_unknown": "Perkiraan waktu belum tersedia",
+    "stage_scope": "Persentase dan perkiraan berlaku untuk tahap ini, bukan seluruh konversi.",
+    "stalled": "Konversi nyanyian dihentikan setelah 30 menit tanpa kemajuan. Proses telah berakhir. Coba cuplikan yang lebih pendek.",
+    "cpu_limit": "Thread CPU: {{threads}}; prioritas diturunkan.",
+    "cancel_unknown": "Pembatalan belum dapat dikonfirmasi. Periksa status atau coba batalkan lagi.",
+    "status_unknown": "Status progres tidak tersedia; pemrosesan mungkin masih berjalan."
   }
 }

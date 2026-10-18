@@ -183,3 +183,12 @@ backend/assets/samples/demo/dubbing/*.src.wav
 
 # Generated Windows MSI diagnostic logs and installer payloads
 /wix-diagnostic-artifacts/
+
+# N3LX local installation and personal runtime state
+/.local/
+/.local-data/
+/.venv-directml/
+/backup-private/
+/.voicestudio-ready.json
+/.voicestudio-directml-ready.json
+bun-install-local.log

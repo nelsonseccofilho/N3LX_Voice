@@ -1,0 +1,33 @@
+{
+  "project": "N3LX_Voice",
+  "snapshot_date": "2026-10-18",
+  "voicestudio": {
+    "repository": "https://github.com/debpalash/VoiceStudio",
+    "commit": "481cf4c43111064d2fd4c589902a878635a91803",
+    "version": "0.5.7"
+  },
+  "llama_cpp_omni": {
+    "repository": "https://github.com/tc-mb/llama.cpp-omni",
+    "commit": "64d092c60db4b4ee45768476bd752f03fdcc98ea",
+    "patch": "patches/llama.cpp-omni/0001-voxcpm2-explicit-cpu-selection.patch"
+  },
+  "seed_vc": {
+    "repository": "https://github.com/Plachtaa/seed-vc",
+    "commit": "51383efd921027683c89e5348211d93ff12ac2a8"
+  },
+  "local_compute": {
+    "speech": "VoxCPM2 native Vulkan; explicit CPU also supported",
+    "singing": "Seed-VC SVC: DirectML + CPU, or CPU",
+    "gpu": "AMD Radeon RX 6600M",
+    "cpu_threads_next_launch": 6
+  },
+  "excluded": [
+    "personal voice recordings and profiles",
+    "model weights",
+    "databases",
+    "logs",
+    "Python environments",
+    "compiled binaries",
+    "device validation records with local paths"
+  ]
+}

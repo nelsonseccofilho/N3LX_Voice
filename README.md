@@ -1,3 +1,11 @@
+# N3LX_Voice
+
+Versão pessoal derivada do VoiceStudio, com suporte local AMD Vulkan/DirectML e conversão de fala e canto. Consulte [as evoluções e instruções do N3LX_Voice](README-N3LX.md).
+
+O histórico, os créditos e a licença do projeto original foram preservados. A documentação original segue abaixo.
+
+---
+
 <div align="center">
   <img src="docs/logo.png" alt="VoiceStudio" width="88" />
   <h1>VoiceStudio</h1>

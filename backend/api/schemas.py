@@ -12,6 +12,13 @@ from core.app_config import DEFAULT_BACKEND_PORT, DEFAULT_WEB_PORT
 
 # ── System ────────────────────────────────────────────────────────────────
 
+class NativeTTSRuntime(BaseModel):
+    """Resident native compute identity; independent of utilization telemetry."""
+    provider: str
+    device_name: str | None = None
+    verified: bool = False
+
+
 class SysinfoResponse(BaseModel):
     """GET /sysinfo"""
     model_config = ConfigDict(extra="allow")
@@ -25,6 +32,7 @@ class SysinfoResponse(BaseModel):
     total_ram: float = Field(description="Total RAM in GiB")
     gpu_name: str = ""
     gpu_utilization: float | None = None
+    tts_runtime: NativeTTSRuntime | None = None
     vram: float = Field(0.0, description="Used VRAM in GiB")
     total_vram: float = Field(0.0, description="Total VRAM in GiB when reported by the runtime")
     gpu_active: bool = Field(False, description="Whether a GPU is actively used")

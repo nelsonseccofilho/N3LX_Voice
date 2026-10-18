@@ -54,3 +54,43 @@ it('does not present cached readings as live while the backend is offline', () =
   expect(screen.queryByText('performanceHardware.everyTwoSeconds')).toBeNull();
   expect(mocks.usage).toHaveBeenLastCalledWith(false);
 });
+
+const nativeGpu = { provider: 'Vulkan', device_name: 'AMD Radeon RX 6600M', verified: true };
+it('shows verified native GPU identity instead of unsupported GPU and VRAM metrics', () => {
+  mocks.usage.mockReturnValue({
+    data: { ...data, gpu_utilization: null, total_vram: 0, tts_runtime: nativeGpu },
+    isError: false,
+  });
+  render(<LiveDeviceUsage open />);
+  expect(screen.getByText('AMD Radeon RX 6600M · Vulkan')).toBeVisible();
+  expect(screen.getByText('performanceHardware.gpuUsing')).toBeVisible();
+  expect(screen.queryByText('modelSettings.unavailable')).toBeNull();
+  expect(screen.queryByText('about.vram')).toBeNull();
+  expect(screen.getByText('24%')).toBeVisible();
+  expect(screen.getByText('18.5 / 63 GB')).toBeVisible();
+});
+it('does not claim a selected but unloaded native GPU is in use', () => {
+  mocks.usage.mockReturnValue({
+    data: {
+      ...data,
+      gpu_utilization: null,
+      total_vram: 0,
+      tts_runtime: { ...nativeGpu, verified: false },
+    },
+    isError: false,
+  });
+  render(<LiveDeviceUsage open />);
+  expect(screen.getByText('Vulkan')).toBeVisible();
+  expect(screen.getByText('performanceHardware.gpuSelected')).toBeVisible();
+  expect(screen.queryByText('AMD Radeon RX 6600M · Vulkan')).toBeNull();
+  expect(screen.queryByText('performanceHardware.gpuUsing')).toBeNull();
+});
+it('hides cached native GPU confirmation on telemetry errors', () => {
+  mocks.usage.mockReturnValue({
+    data: { ...data, tts_runtime: nativeGpu },
+    isError: true,
+    refetch: mocks.retry,
+  });
+  render(<LiveDeviceUsage open />);
+  expect(screen.queryByText('performanceHardware.gpuUsing')).toBeNull();
+});

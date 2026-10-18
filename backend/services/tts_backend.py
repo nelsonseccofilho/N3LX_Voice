@@ -3780,6 +3780,10 @@ def _effective_backend_class(
     host_family: str | None = None,
 ) -> type[TTSBackend]:
     """Resolve host-specific containment without changing the configured id."""
+    if backend_id == "voxcpm2" and os.environ.get("OMNIVOICE_VOXCPM2_NATIVE_BIN", "").strip():
+        from engines.voxcpm2_native import VoxCPM2NativeBackend
+
+        return VoxCPM2NativeBackend
     sidecar = _OWN_VENV_SIDECARS.get(backend_id)
     if sidecar is not None:
         import importlib

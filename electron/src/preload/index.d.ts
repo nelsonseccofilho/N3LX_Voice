@@ -393,6 +393,8 @@ export interface VoiceStudioBridge {
     authorizeModelsDirectory(reset?: boolean): Promise<AuthorizedPathSelection | null>;
     extractScript(input: { name: string; data: Uint8Array }): Promise<string>;
     /** Native "Save as…" for a generated take: main fetches the URL and writes the file. */
+    chooseConversionDestination(file: File): Promise<{ token: string; path: string } | null>;
+    saveConversion(req: { token: string; url: string }): Promise<SaveAudioResult>;
     saveAudio(req: SaveAudioRequest): Promise<SaveAudioResult>;
     saveData(req: SaveDataRequest): Promise<SaveAudioResult>;
     /** Reveal an absolute path in Finder / Explorer / file manager. */

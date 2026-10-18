@@ -1,4 +1,4 @@
-"""Speech-to-speech voice changer — Studio's Convert method (POST /convert).
+"""Speech and singing voice changer — Studio's Convert method (POST /convert).
 
 The user drops (or records) a source clip, picks an existing voice profile,
 and gets the same words back in that profile's voice: the active ASR backend
@@ -36,9 +36,12 @@ import logging
 import os
 import tempfile
 import time
+from typing import Literal
+from uuid import UUID, uuid4
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from core.path_security import upload_suffix
+from core.config import OUTPUTS_DIR
 
 router = APIRouter()
 logger = logging.getLogger("omnivoice.convert")
@@ -111,7 +114,7 @@ async def _match_source_duration(audio_tensor, sample_rate: int, source_duration
         return audio_tensor
 
 
-async def _transcribe_source(tmp_path: str, *, source_lease=None) -> dict:
+async def _transcribe_source(tmp_path: str, *, source_lease=None, job=None) -> dict:
     """Active-ASR transcription of the uploaded clip (no word timestamps).
 
     Mirrors POST /transcribe: typed 409 + download CTA before any backend
@@ -147,7 +150,7 @@ async def _transcribe_source(tmp_path: str, *, source_lease=None) -> dict:
     try:
         return await run_transcribe_guarded(
             _gpu_pool,
-            _run,
+            job.worker(_run) if job else _run,
             what="Voice convert",
             on_abandon=release,
         )
@@ -169,21 +172,213 @@ async def _transcribe_source(tmp_path: str, *, source_lease=None) -> dict:
             release()
 
 
+@router.get("/convert/models")
+async def conversion_models():
+    """Local readiness only: never import inference libraries or fetch weights."""
+    from engines import seed_vc
+    from services.tts_backend import active_backend_id, get_backend_class
+    try:
+        cls = get_backend_class(active_backend_id())
+        options = ["gpu", "cpu"] if getattr(cls, "supports_compute_selection", False) else ["auto"]
+    except (ValueError, RuntimeError):
+        options = ["auto"]
+    return {"singing": seed_vc.status(), "speech": {"compute_options": options}}
+
+
+async def _while_connected(request: Request, operation, job=None):
+    """Retire the owned inference when a long-running HTTP client disconnects."""
+    stopped = asyncio.Event()
+
+    async def disconnected():
+        while not stopped.is_set():
+            if job is not None and job.cancel_requested.is_set():
+                return
+            if await request.is_disconnected():
+                if job is not None:
+                    job.cancel()
+                return
+            await asyncio.sleep(0.5)
+
+    work = asyncio.create_task(operation)
+    watcher = asyncio.create_task(disconnected())
+    try:
+        done, _ = await asyncio.wait({work, watcher}, return_when=asyncio.FIRST_COMPLETED)
+        if work in done:
+            return await work
+        raise HTTPException(status_code=499, detail="Conversion cancelled by client")
+    finally:
+        # Starlette's AnyIO probe can consume task cancellation. The stop flag
+        # also retires the watcher if cancellation lands inside that probe.
+        stopped.set()
+        watcher.cancel()
+        if not work.done():
+            work.cancel()
+        await asyncio.gather(work, watcher, return_exceptions=True)
+
+
+async def _convert_singing(source, cond, profile_id, match_duration, source_lease, job=None, compute="auto"):
+    from engines import seed_vc
+    from api.routers.generation import _finalize_generation
+    from services.model_manager import GpuJobTimeoutError, GpuPoolBusyError, run_on_gpu_pool_guarded
+    from services.watermark import mark_synthetic_async
+
+    reference = cond["ref_audio_path"]
+    if not reference:
+        raise HTTPException(status_code=422, detail={
+            "error": "singing_reference_required",
+            "message": "Singing conversion requires a voice profile with reference audio.",
+        })
+    started = time.time()
+    release = source_lease.acquire()
+    abandoned = False
+    try:
+        render = functools.partial(seed_vc.convert, source, reference, progress=job.update if job else None, **({"compute": compute} if compute != "auto" else {}))
+        if job:
+            job.update("queued")
+        audio_tensor, sample_rate = await run_on_gpu_pool_guarded(
+            job.worker(render) if job else render,
+            # Seed-VC owns a killable child and a real-progress idle watchdog.
+            # Long songs must not inherit the generic fixed TTS compute budget.
+            what="Singing convert", timeout=float("inf"), on_abandon=release,
+        )
+    except asyncio.CancelledError:
+        abandoned = True
+        raise
+    except GpuJobTimeoutError as exc:
+        abandoned = True
+        raise HTTPException(status_code=503, detail=str(exc), headers={
+            "Retry-After": "30", "X-OmniVoice-Retryable": "true",
+        }) from exc
+    except GpuPoolBusyError as exc:
+        # The guard already retired the queued job and released its lease.
+        abandoned = True
+        raise HTTPException(status_code=503, detail=str(exc), headers={
+            "Retry-After": str(exc.retry_after), "X-OmniVoice-Retryable": "true",
+        }) from exc
+    except seed_vc.SingingProgressTimeout as exc:
+        # The adapter's finally has already terminated and reaped its child.
+        raise HTTPException(status_code=504, detail={
+            "error": "singing_progress_timeout",
+            "message": "Singing conversion stopped after 30 minutes without engine progress. Its process has exited; retry with a shorter excerpt.",
+        }) from exc
+    except (RuntimeError, TimeoutError, OSError) as exc:
+        logger.exception("Seed-VC singing conversion failed")
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    finally:
+        if not abandoned:
+            release()
+    if job:
+        job.check()
+    if match_duration:
+        if job:
+            job.update("matching")
+        from services.ffmpeg_utils import probe_duration
+        duration = await probe_duration(source, allowed_root=os.path.dirname(source))
+        if duration:
+            audio_tensor = await _match_source_duration(audio_tensor, sample_rate, duration)
+    if job:
+        job.check()
+        job.update("marking")
+    audio_tensor = await mark_synthetic_async(audio_tensor, sample_rate, context="convert.singing.finalize")
+    if job:
+        job.check()
+        job.update("saving")
+    _, meta = await _finalize_generation(
+        audio_tensor, sample_rate, text="", history_mode="convert",
+        ref_audio_path=reference, language=cond["language"], instruct=cond["instruct"],
+        resolved_profile_id=profile_id, used_seed=None, start_time=started, already_marked=True,
+    )
+    return {"id": meta["id"], "audio_url": f"/audio/{meta['filename']}", "text": "",
+            "output_path": os.path.abspath(os.path.join(OUTPUTS_DIR, meta["filename"])),
+            "duration_s": meta["duration"], "gen_time_s": meta["gen_time"],
+            "engine_id": "seed-vc-svc", "device": ("cpu" if compute == "cpu" else "directml") if compute != "auto" else seed_vc.status().get("device", "cpu")}
+
+
+@router.get("/convert/jobs/{job_id}")
+async def conversion_progress(job_id: UUID):
+    from services.conversion_jobs import get
+    job = get(str(job_id))
+    if job is None:
+        raise HTTPException(status_code=404, detail="Conversion job not found")
+    return job.snapshot()
+
+
+@router.post("/convert/jobs/{job_id}/cancel")
+async def cancel_conversion(job_id: UUID):
+    from services.conversion_jobs import get, create
+    job = get(str(job_id))
+    if job is None:
+        # Cancel can beat multipart upload completion. Reserve its UUID so a
+        # late POST cannot start a conversion after cancellation was confirmed.
+        try:
+            job = create(str(job_id))
+        except ValueError:
+            job = get(str(job_id))
+        else:
+            job.cancel()
+            job.finish("cancelled")
+    job.cancel()
+    # A bounded wait is a receipt, not a claim that native work stopped.
+    deadline = time.monotonic() + 8
+    while job.snapshot()["state"] == "cancelling" and time.monotonic() < deadline:
+        await asyncio.sleep(0.1)
+    return job.snapshot()
+
+
 @router.post("/convert")
 async def convert_speech(
+    request: Request,
     audio: UploadFile = File(...),
     profile_id: str = Form(...),
     match_duration: bool = Form(True),
+    mode: Literal["speech", "singing"] = Form("speech"),
+    job_id: UUID | None = Form(None),
+    compute: Literal["auto", "cpu", "gpu"] = Form("auto"),
 ):
-    """Convert a spoken clip into an existing voice profile's voice.
+    from services.conversion_jobs import create, ConversionCancelled
+    try:
+        job = create(str(job_id or uuid4()))
+    except ValueError as exc:
+        from services.conversion_jobs import get
+        existing = get(str(job_id))
+        if existing and existing.cancel_requested.is_set():
+            raise HTTPException(status_code=499, detail="Conversion already cancelled") from exc
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    try:
+        result = await _while_connected(
+            request, _convert_audio(audio, profile_id, match_duration, mode, job, compute), job,
+        )
+        job.finish("completed")
+        return {**result, "job_id": job.id}
+    except (asyncio.CancelledError, ConversionCancelled):
+        job.cancel()
+        job.finish("cancelled")
+        raise
+    except HTTPException as exc:
+        if exc.status_code == 499 or job.cancel_requested.is_set():
+            job.cancel()
+            job.finish("cancelled")
+        else:
+            job.finish("failed")
+        raise
+    except Exception:
+        job.finish("failed")
+        raise
 
-    Multipart form: ``audio`` (the source clip), ``profile_id`` (an existing
-    voice profile), optional ``match_duration`` (default on — atempo the take
-    toward the source clip's length, clamped to 0.5–2.0×).
 
-    Returns JSON ``{audio_url, text, duration_s, id}`` — the take is saved to
-    OUTPUTS_DIR and served from the ``/audio`` mount like every other take.
-    """
+async def _convert_audio(audio, profile_id, match_duration, mode, job, compute="auto"):
+    # Mode is explicit; singing never enters the speech transcription pipeline.
+    if mode == "singing":
+        from engines import seed_vc
+        if compute != "auto" and compute not in seed_vc.status().get("compute_options", []):
+            raise HTTPException(status_code=409, detail="Requested singing compute device is unavailable")
+        if compute == "auto" and not seed_vc.status()["available"]:
+            raise HTTPException(status_code=409, detail={
+                "error": "singing_engine_unavailable",
+                "message": "Singing conversion is not configured. Prepare the local Seed-VC SVC engine first.",
+            })
     from core.db import db_conn
     from api.routers.generation import _resolve_profile_conditioning, _TempReferenceLease
 
@@ -213,20 +408,28 @@ async def convert_speech(
         finally:
             tmp.close()
         source_lease = _TempReferenceLease(tmp.name)
+        if mode == "singing":
+            return await _convert_singing(tmp.name, cond, profile_id, match_duration, source_lease, job, compute)
+
 
         # ── Engine gate before ASR/TTS work: the shared resolver refuses a
         # clone-less engine with the actionable switch-engine message (→ 400),
         # and a backend mid-shutdown raises ModelLoadInterruptedByShutdown out
         # of the model load → the global 503 [shutting_down] handler.
+        job.update("loading")
         from services.tts_backend import active_backend_id, resolve_generation_backend
         try:
-            backend = await resolve_generation_backend(
+            backend = await job.async_call(resolve_generation_backend(
                 require_cloning=True, cloning_purpose="voice conversion",
-            )
+            ))
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-        result = await _transcribe_source(tmp.name, source_lease=source_lease)
+        if compute != "auto" and not getattr(backend, "supports_compute_selection", False):
+            raise HTTPException(status_code=409, detail="This speech model does not support per-conversion device selection")
+        job.check()
+        job.update("transcribing")
+        result = await _transcribe_source(tmp.name, source_lease=source_lease, job=job)
 
         segments = result.get("segments", [])
         text = result.get("text", "")
@@ -263,7 +466,7 @@ async def convert_speech(
             from services.model_manager import run_on_gpu_pool_guarded
             try:
                 cond["ref_text"] = await run_on_gpu_pool_guarded(
-                    functools.partial(transcribe_reference, cond["ref_audio_path"]),
+                    job.worker(functools.partial(transcribe_reference, cond["ref_audio_path"])),
                     what="Reference transcribe",
                     timeout=_generate_timeout_s(""),
                 )
@@ -313,6 +516,8 @@ async def convert_speech(
         compute_profile = await runtime_compute_profile_async(
             backend, detect_host_caps()
         )
+        if compute != "auto":
+            compute_profile = {**compute_profile, "effective_device": "cpu" if compute == "cpu" else "vulkan", "routing_status": "cpu_only" if compute == "cpu" else "accelerated", "min_vram_gb": 0.0}
         if compute_profile["routing_status"] == "unavailable":
             raise HTTPException(
                 status_code=400,
@@ -332,9 +537,17 @@ async def convert_speech(
             True, _profile_defaults.get("postprocess_output", True),
             used_seed,
         )
+        if compute != "auto":
+            original_render = _render
+            def selected_render():
+                with backend.conversion_device(compute):
+                    return original_render()
+            _render = selected_render
+        job.check()
+        job.update("synthesizing")
         try:
             audio_tensor = await run_on_gpu_pool_guarded(
-                _render,
+                job.worker(_render),
                 what="Voice convert",
                 timeout=_generate_timeout_s(
                     text,
@@ -361,7 +574,9 @@ async def convert_speech(
             raise HTTPException(status_code=400, detail=str(e)) from e
         sample_rate = backend.sample_rate
 
+        job.check()
         if match_duration and source_duration_s:
+            job.update("matching")
             audio_tensor = await _match_source_duration(
                 audio_tensor, sample_rate, source_duration_s,
             )
@@ -370,9 +585,13 @@ async def convert_speech(
         # the user actually keeps), then the shared finalize tail — WAV in
         # OUTPUTS_DIR, self-healing history row, retention prune, event emit.
         from services.watermark import mark_synthetic_async
+        job.check()
+        job.update("marking")
         audio_tensor = await mark_synthetic_async(
             audio_tensor, sample_rate, context="convert.finalize",
         )
+        job.check()
+        job.update("saving")
         _, meta = await _finalize_generation(
             audio_tensor, sample_rate, text=text, history_mode="convert",
             ref_audio_path=cond["ref_audio_path"], language=language,
@@ -384,6 +603,7 @@ async def convert_speech(
         return {
             "id": meta["id"],
             "audio_url": f"/audio/{meta['filename']}",
+            "output_path": os.path.abspath(os.path.join(OUTPUTS_DIR, meta["filename"])),
             "text": text,
             "duration_s": meta["duration"],
             "gen_time_s": meta["gen_time"],

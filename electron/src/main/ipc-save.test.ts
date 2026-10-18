@@ -146,3 +146,23 @@ it('carries the backend error body when a backend download fails (#2616)', async
   });
   expect(await readFile(native.savePath, 'utf8')).toBe('complete previous export');
 });
+
+it('exports the planned converted audio through the real backend download boundary', async () => {
+  const { net } = await import('electron');
+  const plan = (await native.handlers.get(CHANNELS.filesChooseConversionDestination)!(event, {
+    name: 'source.wav',
+    sourcePath: join(directory, 'source.wav'),
+  })) as { token: string; path: string };
+  expect(await readdir(directory)).toEqual([]);
+  await expect(
+    native.handlers.get(CHANNELS.filesSaveConversion)!(event, {
+      token: plan.token,
+      url: '/api/audio/converted.wav',
+    }),
+  ).resolves.toEqual({ canceled: false, path: native.savePath });
+  expect(net.fetch).toHaveBeenLastCalledWith(
+    'http://127.0.0.1:3900/audio/converted.wav',
+    expect.any(Object),
+  );
+  expect(await readFile(native.savePath, 'utf8')).toBe('replacement audio bytes');
+});

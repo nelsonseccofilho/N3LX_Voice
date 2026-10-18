@@ -2513,7 +2513,33 @@
     "copied": "Đã sao chép",
     "tailscale_qr_alt": "Mã QR cho URL Tailscale"
   },
+  "convertOptions": {
+    "cpu_hint": "Mô hình giọng nói sẽ chạy trên CPU.",
+    "compute": "Xử lý mô hình giọng nói",
+    "compute_hint": "GPU dùng khả năng tăng tốc hiện có; một số bước vẫn dùng CPU.",
+    "output": "Tệp đầu ra",
+    "output_hint": "Chọn nơi lưu trước khi chuyển đổi. Thư mục nguồn và {{name}} được đề xuất. Với bản ghi âm, hãy chọn một thư mục.",
+    "unavailable": "Mô hình này không hỗ trợ chọn thiết bị; cài đặt hiện tại sẽ được dùng."
+  },
   "convert": {
+    "saved_in_app": "Bản sao trong lịch sử ứng dụng",
+    "save_hint": "Âm thanh hoàn tất được lưu trong lịch sử ứng dụng và có thể bị xóa khi dọn lịch sử. Dùng Lưu thành… để chọn tên và thư mục cho một bản sao riêng.",
+    "target_selected": "Giọng đích đã chọn",
+    "target_required": "Chọn giọng đích trước khi chuyển đổi.",
+    "no_singing_model": "Không có mô hình giọng hát trong bản cài đặt này.",
+    "singing_model": "Mô hình giọng hát",
+    "model_required": "Bắt buộc",
+    "model_required_hint": "Phải chọn mô hình tương thích trước khi chuyển đổi. Hồ sơ giọng nói được chọn riêng.",
+    "select_model": "Chọn mô hình",
+    "audio_type": "Loại âm thanh",
+    "speech": "Giọng nói",
+    "singing": "Giọng hát",
+    "speech_hint": "Nhận dạng từ và tạo lời nói bằng giọng đã chọn. Không giữ lại giai điệu hát.",
+    "singing_hint": "Đổi giọng hát mà vẫn giữ giai điệu và nhịp điệu cần một bộ máy chuyên cho giọng hát.",
+    "singing_reference_required": "Chuyển đổi giọng hát cần âm thanh tham chiếu trong hồ sơ giọng nói đã chọn.",
+    "singing_unavailable": "Chuyển đổi giọng hát chưa được cấu hình. Mô hình giọng nói sẽ không được sử dụng.",
+    "speech_model": "Mô hình giọng nói",
+    "change_model": "Đổi mô hình",
     "cloning_required": "Chọn mô hình chuyển văn bản thành giọng nói sẵn sàng sử dụng và hỗ trợ nhân bản giọng nói.",
     "source_kicker": "Clip nguồn",
     "drop_audio": "Thả clip cần chuyển đổi vào đây — hoặc nhấp. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Mức sử dụng hiện tại",
     "everyTwoSeconds": "Mỗi 2 giây",
     "appVram": "VRAM ứng dụng",
-    "voiceFirst": "Ưu tiên chất lượng giọng nói"
+    "voiceFirst": "Ưu tiên chất lượng giọng nói",
+    "gpuUsing": "GPU đang được sử dụng",
+    "gpuSelected": "Đã chọn · mô hình chưa được tải"
   },
   "voiceControls": {
     "title": "Điều chỉnh giọng nói",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Hãy chấp nhận giấy phép của từng mô hình bên dưới trước khi sử dụng. Hãy xem từng giấy phép rồi đánh dấu ô tương ứng.",
     "retryHint": "Đã chấp nhận giấy phép. Nếu có thao tác đang chờ, hãy chạy lại.",
     "detailsFailed": "Không thể tải chi tiết giấy phép. Hãy đóng hộp thoại này và thử lại."
+  }
+,
+  "convertProgress": {
+    "title": "Tiến độ chuyển đổi",
+    "analyzing": "Đang phân tích âm thanh",
+    "diffusion": "Đang chuyển đổi giọng hát",
+    "vocoder": "Đang tạo dạng sóng",
+    "validating": "Đang kiểm tra âm thanh",
+    "marking": "Đang thêm nhận dạng âm thanh tổng hợp",
+    "cancelling": "Đã yêu cầu hủy; đang chờ xử lý dừng…",
+    "cancelled": "Đã xác nhận hủy — xử lý đã dừng.",
+    "completed": "Chuyển đổi hoàn tất",
+    "stage_progress": "Tiến độ giai đoạn hiện tại",
+    "steps": "Đoạn {{chunk}} · bước {{step}}/{{total}} · {{percent}}% giai đoạn này",
+    "eta": "Thời gian ước tính còn lại của giai đoạn này: {{time}}",
+    "eta_unknown": "Chưa thể ước tính thời gian",
+    "stage_scope": "Phần trăm và ước tính chỉ áp dụng cho giai đoạn này, không phải toàn bộ quá trình.",
+    "stalled": "Chuyển đổi giọng hát đã dừng sau 30 phút không có tiến triển. Tiến trình đã kết thúc. Hãy thử đoạn ngắn hơn.",
+    "cpu_limit": "Luồng CPU: {{threads}}; giảm mức ưu tiên.",
+    "cancel_unknown": "Chưa xác nhận được việc hủy. Kiểm tra trạng thái hoặc thử hủy lại.",
+    "status_unknown": "Không có trạng thái tiến độ; xử lý có thể vẫn đang chạy."
   }
 }

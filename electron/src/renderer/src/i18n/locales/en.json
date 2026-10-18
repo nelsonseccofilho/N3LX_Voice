@@ -2570,7 +2570,33 @@
     "copied": "Copied",
     "tailscale_qr_alt": "QR code for the Tailscale URL"
   },
+  "convertOptions": {
+    "cpu_hint": "The voice model will run on the CPU.",
+    "compute": "Voice model processing",
+    "compute_hint": "GPU uses available acceleration; some stages still use CPU.",
+    "output": "Output file",
+    "output_hint": "Choose the destination before converting. The source folder and {{name}} are suggested. For recordings, choose a folder.",
+    "unavailable": "Device selection is unavailable for this model; its current setting is used."
+  },
   "convert": {
+    "saved_in_app": "Copy in app history",
+    "save_hint": "Completed audio stays in app history and may be removed by history cleanup. Use Save As… to choose a name and folder for a separate copy.",
+    "target_selected": "Selected target voice",
+    "target_required": "Select a target voice before converting.",
+    "no_singing_model": "No singing model is available in this installation.",
+    "singing_model": "Singing model",
+    "model_required": "Required",
+    "model_required_hint": "A compatible model must be selected before converting. The voice profile is chosen separately.",
+    "select_model": "Select model",
+    "audio_type": "Audio type",
+    "speech": "Speech",
+    "singing": "Singing",
+    "speech_hint": "Recognizes the words and generates speech in the selected voice. Does not preserve sung melodies.",
+    "singing_hint": "Changing a singing voice while preserving melody and rhythm requires a dedicated singing engine.",
+    "singing_reference_required": "Singing conversion requires reference audio in the selected voice profile.",
+    "singing_unavailable": "Singing conversion is not configured yet. The speech model will not be used.",
+    "speech_model": "Speech model",
+    "change_model": "Change model",
     "cloning_required": "Choose a ready text-to-speech model that supports voice cloning.",
     "source_kicker": "Source clip",
     "drop_audio": "Drop the clip to convert — or click. WAV, MP3, M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "Live usage",
     "everyTwoSeconds": "Every 2 s",
     "appVram": "App VRAM",
-    "voiceFirst": "Voice quality first"
+    "voiceFirst": "Voice quality first",
+    "gpuUsing": "GPU in use",
+    "gpuSelected": "Selected · model not loaded"
   },
   "voiceControls": {
     "title": "Voice controls",
@@ -3460,5 +3488,26 @@
     "gateIntro": "Accept the licence of each model below before using it. Review each one, then tick its box.",
     "retryHint": "Licences accepted. If something was waiting for them, start it again.",
     "detailsFailed": "The licence details could not be loaded. Close this dialog and try again."
+  }
+,
+  "convertProgress": {
+    "title": "Conversion progress",
+    "analyzing": "Analyzing audio",
+    "diffusion": "Converting singing",
+    "vocoder": "Generating waveform",
+    "validating": "Validating audio",
+    "marking": "Applying synthetic audio identification",
+    "cancelling": "Cancellation requested; waiting for processing to stop…",
+    "cancelled": "Cancellation confirmed — processing stopped.",
+    "completed": "Conversion completed",
+    "stage_progress": "Progress of current stage",
+    "steps": "Chunk {{chunk}} · step {{step}}/{{total}} · {{percent}}% of this stage",
+    "eta": "Estimated time left in this stage: {{time}}",
+    "eta_unknown": "Time estimate not yet available",
+    "stage_scope": "Percentage and estimate apply to this stage, not the entire conversion.",
+    "stalled": "Singing conversion stopped after 30 minutes without progress. The process has ended. Try a shorter excerpt.",
+    "cpu_limit": "CPU threads: {{threads}}; reduced priority.",
+    "cancel_unknown": "Could not confirm cancellation. Check the status or try cancelling again.",
+    "status_unknown": "Progress status unavailable; processing may still be running."
   }
 }

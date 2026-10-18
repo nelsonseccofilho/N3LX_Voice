@@ -21,21 +21,23 @@ function exportMode(filename: string): 'audio' | 'video' | 'file' {
 export async function saveExport(url: string, suggestedName: string) {
   const saved = await saveBackendFile({ url, suggestedName });
   if (!saved) return null;
-  if (!saved.canceled && saved.path) {
-    try {
-      await apiJson('/export/record', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          filename: saved.path.split(/[\\/]/).pop() || suggestedName,
-          destination_path: saved.path,
-          mode: exportMode(saved.path),
-        }),
-      });
-      await queryClient.invalidateQueries({ queryKey: ['export-history'] });
-    } catch (error) {
-      console.warn('Could not record the completed export', error);
-    }
-  }
+  if (!saved.canceled && saved.path) await recordExport(saved.path, suggestedName);
   return saved;
+}
+
+export async function recordExport(path: string, suggestedName: string) {
+  try {
+    await apiJson('/export/record', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: path.split(/[\\/]/).pop() || suggestedName,
+        destination_path: path,
+        mode: exportMode(path),
+      }),
+    });
+    await queryClient.invalidateQueries({ queryKey: ['export-history'] });
+  } catch (error) {
+    console.warn('Could not record the completed export', error);
+  }
 }

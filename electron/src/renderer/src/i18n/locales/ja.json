@@ -2513,7 +2513,33 @@
     "copied": "コピーされました",
     "tailscale_qr_alt": "Tailscale URL の QR コード"
   },
+  "convertOptions": {
+    "cpu_hint": "音声モデルはCPUで実行されます。",
+    "compute": "音声モデルの処理",
+    "compute_hint": "GPUは利用可能な高速化を使います。一部の処理はCPUで実行されます。",
+    "output": "出力ファイル",
+    "output_hint": "変換前に保存先を選択してください。元のフォルダーと{{name}}を提案します。録音の場合はフォルダーを選択してください。",
+    "unavailable": "このモデルではデバイスを選択できません。現在の設定を使用します。"
+  },
   "convert": {
+    "saved_in_app": "アプリの履歴内のコピー",
+    "save_hint": "完成した音声はアプリの履歴に保存され、履歴の整理時に削除される場合があります。「名前を付けて保存…」で別のコピーの名前と保存先を選択してください。",
+    "target_selected": "選択した変換先の声",
+    "target_required": "変換前に変換先の声を選択してください。",
+    "no_singing_model": "この環境では歌声モデルを利用できません。",
+    "singing_model": "歌声モデル",
+    "model_required": "必須",
+    "model_required_hint": "変換前に対応するモデルを選択する必要があります。音声プロフィールは別に選択します。",
+    "select_model": "モデルを選択",
+    "audio_type": "音声の種類",
+    "speech": "話し声",
+    "singing": "歌声",
+    "speech_hint": "言葉を認識し、選択した声で読み上げます。歌のメロディーは保持されません。",
+    "singing_hint": "メロディーとリズムを保って歌声を変換するには、歌声専用エンジンが必要です。",
+    "singing_reference_required": "歌声変換には、選択した音声プロフィールの参照音声が必要です。",
+    "singing_unavailable": "歌声変換はまだ設定されていません。話し声用モデルは使用しません。",
+    "speech_model": "話し声用モデル",
+    "change_model": "モデルを変更",
     "cloning_required": "音声クローンに対応した、使用可能な音声合成モデルを選択してください。",
     "source_kicker": "ソースクリップ",
     "drop_audio": "変換するクリップをドロップ — またはクリック。WAV、MP3、M4A…",
@@ -3305,7 +3331,9 @@
     "liveUsage": "現在の使用状況",
     "everyTwoSeconds": "2秒ごと",
     "appVram": "アプリのVRAM",
-    "voiceFirst": "音声品質を優先"
+    "voiceFirst": "音声品質を優先",
+    "gpuUsing": "GPUを使用中",
+    "gpuSelected": "選択済み · モデル未読み込み"
   },
   "voiceControls": {
     "title": "音声コントロール",
@@ -3460,5 +3488,26 @@
     "gateIntro": "下記の各モデルを使う前に、そのライセンスに同意してください。それぞれを確認し、チェックボックスをオンにしてください。",
     "retryHint": "ライセンスに同意しました。待機中の操作があれば、もう一度実行してください。",
     "detailsFailed": "ライセンスの詳細を読み込めませんでした。このダイアログを閉じて、もう一度お試しください。"
+  }
+,
+  "convertProgress": {
+    "title": "変換の進行状況",
+    "analyzing": "音声を解析中",
+    "diffusion": "歌声を変換中",
+    "vocoder": "波形を生成中",
+    "validating": "音声を検証中",
+    "marking": "合成音声の識別情報を付加中",
+    "cancelling": "キャンセルを要求しました。処理の停止を待っています…",
+    "cancelled": "キャンセルを確認しました。処理は停止しました。",
+    "completed": "変換が完了しました",
+    "stage_progress": "現在の段階の進行状況",
+    "steps": "区間 {{chunk}} · ステップ {{step}}/{{total}} · この段階の {{percent}}%",
+    "eta": "この段階の推定残り時間: {{time}}",
+    "eta_unknown": "残り時間はまだ推定できません",
+    "stage_scope": "割合と推定時間は現在の段階を示し、変換全体ではありません。",
+    "stalled": "歌声変換は30分間進行がなかったため停止しました。処理は終了しています。短い区間で再試行してください。",
+    "cpu_limit": "CPUスレッド数: {{threads}}、優先度を低下。",
+    "cancel_unknown": "キャンセルを確認できませんでした。状態を確認するか、再試行してください。",
+    "status_unknown": "進行状況を取得できません。処理はまだ実行中の可能性があります。"
   }
 }

@@ -814,6 +814,26 @@ async def clear_tauri_logs():
         )
     return {"cleared": cleared, "failed": 0}
 
+def _native_tts_runtime() -> dict | None:
+    """Read native load evidence without loading engines or guessing metrics."""
+    try:
+        from core.device_caps import detect_host_caps
+        from services.engine_routing import runtime_compute_profile
+        from services.tts_backend import active_backend_id, get_backend_class
+
+        profile = runtime_compute_profile(get_backend_class(active_backend_id()), detect_host_caps())
+        verified = profile.get("runtime_device_verified")
+        if profile.get("effective_device") == "vulkan" and isinstance(verified, bool):
+            return {
+                "provider": "Vulkan",
+                "device_name": profile.get("runtime_device_name") if verified else None,
+                "verified": verified,
+            }
+    except Exception:
+        logger.debug("Native TTS identity could not be checked", exc_info=True)
+    return None
+
+
 @router.get("/sysinfo", response_model=SysinfoResponse)
 def get_sys_info():
     vram = 0.0
@@ -862,7 +882,8 @@ def get_sys_info():
         "gpu_utilization": gpu_utilization,
         "vram": round(vram, 2),
         "total_vram": round(total_vram, 2),
-        "gpu_active": gpu_active
+        "gpu_active": gpu_active,
+        "tts_runtime": _native_tts_runtime(),
     }
 
 @router.post("/system/flush-memory")
@@ -946,6 +967,29 @@ def _gpu_arch_warning_cached() -> "str | None":
         except Exception:
             _GPU_ARCH_WARNING.append(None)
     return _GPU_ARCH_WARNING[-1]
+
+
+def _active_tts_uses_cpu() -> bool:
+    """Inspect selected-engine routing without constructing or loading a model.
+
+    Native providers can use a GPU independently of the parent's PyTorch.
+    A selected-but-unloaded Vulkan engine is not evidence of CPU execution.
+    Keep the existing host warning if optional routing metadata is unavailable.
+    """
+    try:
+        from core.device_caps import detect_host_caps
+        from services.engine_routing import runtime_compute_profile
+        from services.tts_backend import active_backend_id, get_backend_class
+
+        engine_cls = get_backend_class(active_backend_id())
+        profile = runtime_compute_profile(engine_cls, detect_host_caps())
+        device = profile["effective_device"]
+        if not device:
+            raise ValueError("Missing effective TTS device")
+        return device == "cpu"
+    except Exception:
+        logger.warning("Active TTS compute could not be checked")
+        return True
 
 
 @router.get("/system/notifications")
@@ -1034,9 +1078,9 @@ def system_notifications():
     except Exception:
         pass
 
-    # 4. GPU not available
+    # 4. Do not mistake CPU-only parent torch for a native engine CPU fallback.
     device = get_best_device()
-    if device == "cpu":
+    if device == "cpu" and _active_tts_uses_cpu():
         notes.append({
             "id": "gpu-unavailable",
             "level": "info",

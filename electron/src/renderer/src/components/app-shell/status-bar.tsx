@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { useBackendStatus } from '@/hooks/use-backend-status';
 import { isBackendReachable } from '@shared/utils/backendStage';
 import { engineFamilyState, useEngines } from '@/hooks/use-engines';
+import { GpuRuntimeSummary } from '@/components/gpu-runtime-summary';
 import { useDeviceUsage } from '@/hooks/use-device-usage';
 import { useDictationSelection } from '@/hooks/use-dictation-selection';
 import { cn } from '@/lib/utils';
@@ -347,7 +348,7 @@ export function StatusBar({
         >
           {t('common.retry')}
         </button>
-      ) : deviceUsage.data ? (
+      ) : deviceUsage.data && isBackendReachable(status.stage) ? (
         <div className="space-y-3 rounded-lg border border-border/55 bg-muted/20 p-2.5">
           <DeviceMetric
             Icon={CpuIcon}
@@ -373,25 +374,29 @@ export function StatusBar({
             value={formatMemory(deviceUsage.data.ram, deviceUsage.data.total_ram)}
             percent={boundedPercent(deviceUsage.data.ram, deviceUsage.data.total_ram)}
           />
-          <DeviceMetric
-            Icon={MonitorUpIcon}
-            label={t('settings.device_family_gpu')}
-            value={
-              deviceUsage.data.gpu_utilization == null
-                ? t(deviceUsage.data.gpu_active ? 'about.yes' : 'about.no')
-                : `${Math.round(deviceUsage.data.gpu_utilization)}%`
-            }
-            percent={
-              deviceUsage.data.gpu_utilization ??
-              (deviceUsage.data.total_vram > 0
-                ? boundedPercent(deviceUsage.data.vram, deviceUsage.data.total_vram)
-                : deviceUsage.data.gpu_active
-                  ? 100
-                  : 0)
-            }
-            detail={deviceUsage.data.gpu_name}
-            meta={formatMemory(deviceUsage.data.vram, deviceUsage.data.total_vram)}
-          />
+          {deviceUsage.data.tts_runtime && deviceUsage.data.gpu_utilization == null ? (
+            <GpuRuntimeSummary runtime={deviceUsage.data.tts_runtime} />
+          ) : (
+            <DeviceMetric
+              Icon={MonitorUpIcon}
+              label={t('settings.device_family_gpu')}
+              value={
+                deviceUsage.data.gpu_utilization == null
+                  ? t(deviceUsage.data.gpu_active ? 'about.yes' : 'about.no')
+                  : `${Math.round(deviceUsage.data.gpu_utilization)}%`
+              }
+              percent={
+                deviceUsage.data.gpu_utilization ??
+                (deviceUsage.data.total_vram > 0
+                  ? boundedPercent(deviceUsage.data.vram, deviceUsage.data.total_vram)
+                  : deviceUsage.data.gpu_active
+                    ? 100
+                    : 0)
+              }
+              detail={deviceUsage.data.gpu_name}
+              meta={formatMemory(deviceUsage.data.vram, deviceUsage.data.total_vram)}
+            />
+          )}
         </div>
       ) : (
         <div

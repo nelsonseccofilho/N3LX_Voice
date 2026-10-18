@@ -2517,7 +2517,33 @@
     "copied": "Skopiowano",
     "tailscale_qr_alt": "Kod QR dla adresu URL Tailscale"
   },
+  "convertOptions": {
+    "cpu_hint": "Model głosu będzie działać na CPU.",
+    "compute": "Przetwarzanie modelu głosu",
+    "compute_hint": "GPU używa dostępnego przyspieszenia; niektóre etapy nadal używają CPU.",
+    "output": "Plik wyjściowy",
+    "output_hint": "Wybierz miejsce zapisu przed konwersją. Proponujemy folder źródłowy i {{name}}. Dla nagrań wybierz folder.",
+    "unavailable": "Ten model nie obsługuje wyboru urządzenia; zostanie użyte bieżące ustawienie."
+  },
   "convert": {
+    "saved_in_app": "Kopia w historii aplikacji",
+    "save_hint": "Gotowy dźwięk pozostaje w historii aplikacji i może zostać usunięty podczas jej czyszczenia. Użyj Zapisz jako…, aby wybrać nazwę i folder osobnej kopii.",
+    "target_selected": "Wybrany głos docelowy",
+    "target_required": "Wybierz głos docelowy przed konwersją.",
+    "no_singing_model": "W tej instalacji nie ma dostępnego modelu śpiewu.",
+    "singing_model": "Model śpiewu",
+    "model_required": "Wymagane",
+    "model_required_hint": "Przed konwersją trzeba wybrać zgodny model. Profil głosu wybiera się osobno.",
+    "select_model": "Wybierz model",
+    "audio_type": "Typ dźwięku",
+    "speech": "Mowa",
+    "singing": "Śpiew",
+    "speech_hint": "Rozpoznaje słowa i generuje mowę wybranym głosem. Nie zachowuje śpiewanej melodii.",
+    "singing_hint": "Zmiana głosu śpiewającego z zachowaniem melodii i rytmu wymaga osobnego silnika śpiewu.",
+    "singing_reference_required": "Konwersja śpiewu wymaga nagrania referencyjnego w wybranym profilu głosu.",
+    "singing_unavailable": "Konwersja śpiewu nie jest jeszcze skonfigurowana. Model mowy nie zostanie użyty.",
+    "speech_model": "Model mowy",
+    "change_model": "Zmień model",
     "cloning_required": "Wybierz gotowy do użycia model syntezy mowy obsługujący klonowanie głosu.",
     "source_kicker": "Klip źródłowy",
     "drop_audio": "Upuść klip do konwersji — lub kliknij. WAV, MP3, M4A…",
@@ -3309,7 +3335,9 @@
     "liveUsage": "Bieżące użycie",
     "everyTwoSeconds": "Co 2 s",
     "appVram": "VRAM aplikacji",
-    "voiceFirst": "Jakość głosu na pierwszym miejscu"
+    "voiceFirst": "Jakość głosu na pierwszym miejscu",
+    "gpuUsing": "GPU w użyciu",
+    "gpuSelected": "Wybrano · model niezaładowany"
   },
   "voiceControls": {
     "title": "Ustawienia głosu",
@@ -3464,5 +3492,26 @@
     "gateIntro": "Zaakceptuj licencję każdego z poniższych modeli, zanim go użyjesz. Przejrzyj każdą z nich, a następnie zaznacz jej pole.",
     "retryHint": "Licencje zaakceptowane. Jeśli coś na nie czekało, uruchom to ponownie.",
     "detailsFailed": "Nie udało się wczytać szczegółów licencji. Zamknij to okno i spróbuj ponownie."
+  }
+,
+  "convertProgress": {
+    "title": "Postęp konwersji",
+    "analyzing": "Analizowanie dźwięku",
+    "diffusion": "Konwertowanie śpiewu",
+    "vocoder": "Generowanie przebiegu",
+    "validating": "Sprawdzanie dźwięku",
+    "marking": "Oznaczanie dźwięku syntetycznego",
+    "cancelling": "Zażądano anulowania; oczekiwanie na zatrzymanie…",
+    "cancelled": "Anulowanie potwierdzone — przetwarzanie zatrzymane.",
+    "completed": "Konwersja zakończona",
+    "stage_progress": "Postęp bieżącego etapu",
+    "steps": "Fragment {{chunk}} · krok {{step}}/{{total}} · {{percent}}% etapu",
+    "eta": "Szacowany pozostały czas tego etapu: {{time}}",
+    "eta_unknown": "Oszacowanie czasu jest jeszcze niedostępne",
+    "stage_scope": "Procent i oszacowanie dotyczą tego etapu, nie całej konwersji.",
+    "stalled": "Konwersja śpiewu została zatrzymana po 30 minutach bez postępu. Proces zakończono. Spróbuj krótszego fragmentu.",
+    "cpu_limit": "Wątki CPU: {{threads}}; obniżony priorytet.",
+    "cancel_unknown": "Nie potwierdzono anulowania. Sprawdź stan lub spróbuj ponownie.",
+    "status_unknown": "Postęp niedostępny; przetwarzanie może nadal trwać."
   }
 }

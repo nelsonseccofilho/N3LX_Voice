@@ -10,10 +10,12 @@ export function SaveAudioButton({
   url,
   suggestedName,
   disabled = false,
+  onSaved,
 }: {
   url?: string;
   suggestedName: string;
   disabled?: boolean;
+  onSaved?: (path: string) => void;
 }) {
   const { t } = useTranslation();
   const [saving, setSaving] = useState(false);
@@ -27,6 +29,7 @@ export function SaveAudioButton({
       if (!saved) return;
       if (!saved.canceled && saved.path) {
         const path = saved.path;
+        onSaved?.(path);
         toast.success(t('clone.saved_to', { path }), {
           action: {
             label: t('clone.reveal'),
