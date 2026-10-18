@@ -1,3 +1,4 @@
+import { appName } from '@/lib/brand';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { composeBugReportUrl } from '@shared/utils/bugReportDocument';
@@ -6,10 +7,7 @@ import { contactAge, lastBackendContact } from '@shared/utils/backendContact';
 import { clampCrashTail } from '@shared/utils/crashReport';
 import { scrubText } from '@shared/utils/scrub';
 import { describeExitCode, isNativeFaultExit } from '@shared/utils/nativeExit';
-import {
-  _adaptLastRunCrash,
-  type LastRunCrashRecord,
-} from '@shared/utils/runCrashRecord';
+import { _adaptLastRunCrash, type LastRunCrashRecord } from '@shared/utils/runCrashRecord';
 import { getBackendStatusSnapshot } from '@/hooks/use-backend-status';
 import { apiJson } from '@/lib/api/client';
 import { router } from '@/router';
@@ -114,7 +112,7 @@ export function ReportBug({ error }: { error?: Error | string }) {
         nativeStatus.status === 'fulfilled' && nativeStatus.value
           ? nativeStatus.value
           : cachedBackend;
-      const context = ['**App:** VoiceStudio ' + __APP_VERSION__, '**Shell:** Electron'];
+      const context = ['**App:** ' + appName + ' ' + __APP_VERSION__, '**Shell:** Electron'];
       if (staleBuild) {
         context.push(
           `**Build status:** OUTDATED — v${staleBuild.latest} was already available when this was filed`,
@@ -156,7 +154,9 @@ export function ReportBug({ error }: { error?: Error | string }) {
             ...(isNativeFaultExit({
               exitCode: backend.exitCode,
               signal: backend.exitSignal,
-            }) ? [t('reportBug.native_fault_cause')] : []),
+            })
+              ? [t('reportBug.native_fault_cause')]
+              : []),
             scrubText(backend.message),
             '',
             '```',
@@ -180,9 +180,7 @@ export function ReportBug({ error }: { error?: Error | string }) {
           'Exit code: ' + describeExitCode(crash.exitCode, t('common.unknown')),
           'Signal: ' + (crash.signal ?? '—'),
           ...(isNativeFaultExit({ exitCode: crash.exitCode, signal: crash.signal })
-            ? [
-                t('reportBug.native_fault_cause'),
-              ]
+            ? [t('reportBug.native_fault_cause')]
             : []),
           'Uptime (seconds): ' + Math.round(crash.uptimeMs / 1000),
           '```',

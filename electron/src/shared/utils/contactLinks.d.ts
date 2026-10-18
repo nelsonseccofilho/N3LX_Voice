@@ -1,3 +1,4 @@
+export const UPSTREAM_REPO_URL: string;
 export const REPO_URL: string,
   ISSUES_URL: string,
   DISCORD_URL: string,

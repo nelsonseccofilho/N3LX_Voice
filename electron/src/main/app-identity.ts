@@ -1,10 +1,15 @@
+import { join } from 'node:path';
 import type { AboutPanelOptionsOptions, App, MenuItemConstructorOptions } from 'electron';
 import { PRODUCT_NAME } from '../../../config/app-config.mjs';
 
 export const DESKTOP_APP_NAME = PRODUCT_NAME;
 
 /** Set before Electron creates the native application menu. */
-export function installAppIdentity(application: Pick<App, 'setName'>): void {
+export function installAppIdentity(
+  application: Pick<App, 'setName' | 'getPath' | 'setPath'>,
+): void {
+  // Display branding must not move existing preferences or stored sessions.
+  application.setPath('userData', join(application.getPath('appData'), 'VoiceStudio'));
   application.setName(DESKTOP_APP_NAME);
 }
 

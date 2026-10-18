@@ -34,3 +34,11 @@ Este Git preserva o código e as instruções. Áudios próprios, perfis de voz,
 Na instalação local, 56 testes de backend e 53 testes de interface/exportação passaram, assim como a compilação Electron e a verificação dos 21 idiomas. Um teste real de canto de seis segundos na RX 6600M concluiu em 4min01s e salvou uma cópia idêntica à saída interna. A qualidade de timbre exige avaliação auditiva. A validação não constitui teste completo em todas as plataformas nem benchmark de música inteira.
 
 O aumento para seis threads foi preparado depois desse teste e ainda precisa de comparação de desempenho. Os detalhes e limites do caminho híbrido estão na documentação do Seed-VC.
+
+## Identidade do aplicativo
+
+A interface e o aplicativo nativo usam `N3LX_Voice`. Atalhos Pro, página de compra e promoções comerciais foram removidos; o endereço legado `/pro` redireciona ao suporte do projeto. Dar estrela abre este repositório sem executar a ação automaticamente. Como o repositório é privado, não há consulta pública nem contador de estrelas herdado. Os créditos e a licença do VoiceStudio original permanecem disponíveis.
+
+O nome interno do diretório de preferências Electron foi mantido para preservar configurações e sessões existentes. Os endereços de atualização do fork apontam ao próprio N3LX_Voice; uma instalação clonada não deve baixar uma atualização do projeto original sobre as alterações locais. Isso não cria publicações ou instaladores automaticamente.
+
+Os launchers respeitam `OMNIVOICE_DATA_DIR` quando definido. Na instalação existente, reutilizam o banco `.local-data` do checkout irmão `VoiceStudio` quando ele está presente, preservando perfis e tomadas. Um ambiente novo continua com dados locais próprios. O diretório de preferências Electron também permanece no endereço legado para evitar perda de configurações.

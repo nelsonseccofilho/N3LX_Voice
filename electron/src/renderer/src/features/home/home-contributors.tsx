@@ -5,7 +5,7 @@ import { getBridge } from '@/components/bridge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { runRendererTask } from '@/lib/global-error-recovery';
-import { REPO_URL, X_URL } from '@shared/utils/contactLinks';
+import { UPSTREAM_REPO_URL, X_URL } from '@shared/utils/contactLinks';
 import { homeContributors } from './home-contributors-data';
 
 function openProfile(event: MouseEvent<HTMLAnchorElement>) {
@@ -101,7 +101,7 @@ export function HomeContributors() {
                       className="home-contributor"
                       href={
                         login === 'all'
-                          ? `${REPO_URL}/graphs/contributors`
+                          ? `${UPSTREAM_REPO_URL}/graphs/contributors`
                           : `https://github.com/${login}`
                       }
                       target="_blank"

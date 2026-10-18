@@ -42,12 +42,12 @@ it('previews the official website only when the title is clicked', () => {
   browser.open.mockClear();
   render(<HomePage />);
   const title = screen.getByRole('link', { name: 'homeUi.title' });
-  expect(en.homeUi.title).toBe('VoiceStudio.sh Open Source');
-  expect(title).toHaveAttribute('href', 'https://voicestudio.sh');
+  expect(en.homeUi.title).toBe('N3LX_Voice Open Source');
+  expect(title).toHaveAttribute('href', 'https://github.com/nelsonseccofilho/N3LX_Voice');
   fireEvent.mouseEnter(title);
   expect(browser.open).not.toHaveBeenCalled();
   fireEvent.click(title);
-  expect(browser.open).toHaveBeenCalledWith('https://voicestudio.sh');
+  expect(files.openExternal).toHaveBeenCalledWith('https://github.com/nelsonseccofilho/N3LX_Voice');
 });
 
 it('names the feature Dubbing consistently while preserving the existing route', () => {

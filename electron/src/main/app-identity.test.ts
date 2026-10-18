@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import {
   createMacApplicationMenuTemplate,
@@ -11,16 +11,19 @@ describe('installAppIdentity', () => {
   it('names Electron internals consistently', () => {
     const setName = vi.fn();
 
-    installAppIdentity({ setName });
+    const setPath = vi.fn();
+    installAppIdentity({ setName, getPath: () => '/user-config', setPath });
+    expect(setPath).toHaveBeenCalledWith('userData', join('/user-config', 'VoiceStudio'));
+    expect(setPath.mock.invocationCallOrder[0]).toBeLessThan(setName.mock.invocationCallOrder[0]!);
 
     expect(setName).toHaveBeenCalledOnce();
-    expect(setName).toHaveBeenCalledWith('VoiceStudio');
+    expect(setName).toHaveBeenCalledWith('N3LX_Voice');
   });
 
   it('defines the complete native macOS menu with VoiceStudio app labels', () => {
     const template = createMacApplicationMenuTemplate();
 
-    expect(template[0]).toMatchObject({ label: 'VoiceStudio' });
+    expect(template[0]).toMatchObject({ label: 'N3LX_Voice' });
     expect(template[0]?.submenu).toEqual(
       expect.arrayContaining([{ role: 'about' }, { role: 'hide' }, { role: 'quit' }]),
     );
@@ -54,7 +57,7 @@ describe('installAppIdentity', () => {
     installMacApplicationMenu(application, menu, '0.5.6');
 
     expect(application.setAboutPanelOptions).toHaveBeenCalledWith({
-      applicationName: 'VoiceStudio',
+      applicationName: 'N3LX_Voice',
       applicationVersion: '0.5.6',
       version: '0.5.6',
     });

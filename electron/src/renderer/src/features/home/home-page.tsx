@@ -1,3 +1,4 @@
+import { REPO_URL } from '@shared/utils/contactLinks';
 import { HomeFeatureIcon } from './home-feature-icon';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getBridge } from '@/components/bridge';
@@ -215,17 +216,17 @@ export function HomePage() {
                       <TooltipTrigger
                         render={
                           <a
-                            href="https://voicestudio.sh"
+                            href={REPO_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="rounded-md transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
                             onClick={(event) => {
-                              const browser = getBridge()?.browser;
-                              if (!browser) return;
+                              const files = getBridge()?.files;
+                              if (!files) return;
                               event.preventDefault();
                               event.currentTarget.focus();
-                              runRendererTask('Preview official website', () =>
-                                browser.open('https://voicestudio.sh'),
+                              runRendererTask('Open project repository', () =>
+                                files.openExternal(REPO_URL),
                               );
                             }}
                           />

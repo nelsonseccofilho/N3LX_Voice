@@ -15,7 +15,7 @@ export function AppShell() {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
-  const shellOnly = pathname.startsWith('/settings') || pathname === '/pro';
+  const shellOnly = pathname.startsWith('/settings');
   const macWorkspace = isMac() && !shellOnly;
   const SettingsWorkspace = pathname === '/settings/openapi' ? 'div' : 'main';
   return (
